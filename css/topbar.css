@@ -1,0 +1,7 @@
+/* TOPBAR */
+.topbar {
+  background: #ecf0f1;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+}

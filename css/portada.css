@@ -1,0 +1,19 @@
+/* GENERAL */
+body {
+  margin: 0;
+  font-family: Arial;
+  display: flex;
+}
+
+/* MAIN */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* CONTENIDO */
+.content {
+  padding: 20px;
+  text-align: center;
+}

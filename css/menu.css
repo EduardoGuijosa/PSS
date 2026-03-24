@@ -1,0 +1,47 @@
+/* SIDEBAR */
+.sidebar {
+  width: 200px;
+  background: #2c3e50;
+  color: white;
+  height: 100vh;
+  padding: 20px;
+}
+
+.sidebar h2 {
+  text-align: center;
+}
+
+.sidebar button {
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  border: none;
+  background: #34495e;
+  color: white;
+  cursor: pointer;
+}
+
+.sidebar button:hover {
+  background: #1abc9c;
+}
+.layout {
+  display: flex;
+  height: 100vh;
+}
+
+#menu-container {
+  width: 250px;
+  background: #1e293b;
+  color: white;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  flex: 1;
+  overflow-y: auto;
+}

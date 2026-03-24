@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Progreso</title>
+
+    <link rel="stylesheet" href="/css/actividad.css" />
+    <link rel="stylesheet" href="/css/menu.css" />
+    <link rel="stylesheet" href="/css/topbar.css" />
+  </head>
+
+  <body>
+    <div class="layout">
+      <!-- MENU -->
+      <div id="menu-container"></div>
+
+      <!-- CONTENIDO -->
+      <div class="main">
+        <div id="topbar-container"></div>
+
+        <div class="container mt-4">
+          <h2 class="text-center mb-4">Progreso del alumno</h2>
+
+          <div class="card shadow mb-4">
+            <div class="card-body text-center">
+              <h4 id="horasLiberadas"></h4>
+              <h4 id="horasFaltantes"></h4>
+            </div>
+          </div>
+
+          <div id="listaProgreso"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="/js/layout.js"></script>
+    <script src="/js/progreso.js"></script>
+  </body>
+</html>

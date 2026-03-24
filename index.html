@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Servicio Social - Login</title>
+    <link rel="stylesheet" href="/css/login.css" />
+  </head>
+  <body>
+    <div class="top-bar"></div>
+
+    <div class="container">
+      <h1>SERVICIO SOCIAL</h1>
+      <p class="subtitle">UTM</p>
+
+      <form id="loginForm">
+        <label>EMAIL</label>
+        <input
+          type="email"
+          id="email"
+          placeholder="hello@reallygreatsite.com"
+        />
+
+        <label>PASSWORD</label>
+        <input type="password" id="password" placeholder="******" />
+
+        <button type="submit">Iniciar Sesión</button>
+
+        <!-- Botón de registro -->
+        <button id="btnRegister" type="button">Registrarse</button>
+
+        <p id="errorMsg" class="error"></p>
+      </form>
+    </div>
+
+    <!-- Modal oculto (fuera del loginForm) -->
+    <div id="registerModal" class="modal" style="display: none">
+      <div class="modal-content">
+        <h2>Registro</h2>
+        <form id="registerForm" novalidate>
+          <input
+            type="text"
+            id="nombre"
+            name="nombre"
+            placeholder="Nombre"
+            required
+          />
+          <input
+            type="email"
+            id="emailReg"
+            name="email"
+            placeholder="Email"
+            required
+          />
+          <input
+            type="text"
+            id="telefono"
+            name="telefono"
+            placeholder="Teléfono"
+            required
+          />
+          <select id="rol" name="rol" required>
+            <option value="">Selecciona rol</option>
+            <option value="alumno">Alumno</option>
+            <option value="tutor">Tutor</option>
+            <option value="responsable">Responsable de Proyecto</option>
+          </select>
+
+          <!-- Campos extra para alumno (ocultos por defecto) -->
+          <div id="alumnoFields" style="display: none">
+            <input
+              type="text"
+              id="matricula"
+              name="matricula"
+              placeholder="Matrícula"
+            />
+            <select id="grupo" name="grupo">
+              <option value="">Selecciona grupo</option>
+              <option value="1">Grupo 1</option>
+              <option value="2">Grupo 2</option>
+            </select>
+            <select id="turno" name="turno">
+              <option value="">Selecciona turno</option>
+              <option value="mañana">Mañana</option>
+              <option value="tarde">Tarde</option>
+            </select>
+            <select id="tutor" name="tutor">
+              <option value="">Selecciona tutor</option>
+              <!-- Se llenará dinámicamente desde la BD -->
+            </select>
+          </div>
+
+          <input
+            type="password"
+            id="passwordReg"
+            name="password"
+            placeholder="Contraseña"
+            required
+          />
+          <button type="submit">Crear cuenta</button>
+        </form>
+        <button id="closeModal">Cerrar</button>
+      </div>
+    </div>
+
+    <script src="/js/login.js"></script>
+  </body>
+</html>

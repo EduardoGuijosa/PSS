@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Actividades</title>
+
+    <!-- Bootstrap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- TUS CSS -->
+    <link rel="stylesheet" href="/css/portada.css" />
+    <link rel="stylesheet" href="/css/menu.css" />
+    <link rel="stylesheet" href="/css/topbar.css" />
+    <link rel="stylesheet" href="/css/actividad.css" />
+  </head>
+
+  <body>
+    <!-- MENU -->
+    <div id="menu-container"></div>
+
+    <!-- MAIN -->
+    <div class="main">
+      <!-- TOPBAR -->
+      <div id="topbar-container"></div>
+
+      <!-- CONTENIDO -->
+      <div class="content">
+        <div class="container">
+          <h1 class="my-4">Actividades</h1>
+
+          <button
+            id="btnNuevaActividad"
+            class="btn btn-primary mb-4"
+            onclick="abrirNuevo()"
+          >
+            Nueva Actividad
+          </button>
+
+          <div id="sinActividades" style="display: none">
+            No hay actividades registradas
+          </div>
+
+          <div id="listaActividades"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL ACTIVIDAD -->
+    <div class="modal fade" id="modalActividad" tabindex="-1">
+      <div class="modal-dialog">
+        <form id="formActividad" class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Actividad</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <input type="hidden" id="actividadId" />
+
+            <label>Nombre de la actividad</label>
+            <input
+              class="form-control mb-2"
+              id="nombreActividad"
+              placeholder="Nombre"
+            />
+            <label>Descripción</label>
+            <textarea
+              class="form-control mb-2"
+              id="descripcion"
+              placeholder="Descripción"
+            ></textarea>
+            <label>Horas que libera</label>
+            <input
+              class="form-control mb-2"
+              id="horas"
+              type="number"
+              placeholder="Horas"
+            />
+            <div class="mb-3">
+              <label>Alumnos requeridos</label>
+              <input
+                type="number"
+                id="totalAlumnos"
+                class="form-control"
+                required
+              />
+            </div>
+            <label>Fecha de inicio</label>
+            <input class="form-control mb-2" id="fechaInicio" type="date" />
+            <label>Fecha de termino</label>
+            <input class="form-control mb-2" id="fechaFin" type="date" />
+          </div>
+
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- MODAL TAREAS -->
+    <div class="modal fade" id="modalTareas" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              Tareas de la actividad:
+              <span id="nombreActividadModal"></span>
+            </h5>
+            <p id="infoHoras" class="mt-2 fw-bold text-primary"></p>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <button class="btn btn-success mb-3" onclick="abrirNuevaTarea()">
+              + Nueva tarea
+            </button>
+
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Horas</th>
+                  <th>Fecha</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tablaTareas"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL CREAR/EDITAR TAREA -->
+    <div class="modal fade" id="modalFormTarea" tabindex="-1">
+      <div class="modal-dialog">
+        <form id="formTarea" class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Tarea</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <input type="hidden" id="tareaId" />
+
+            <label>Nombre</label>
+            <input
+              class="form-control mb-2"
+              id="nombreTarea"
+              placeholder="Nombre de la tarea"
+            />
+
+            <label>Horas</label>
+            <input
+              class="form-control mb-2"
+              id="horasTarea"
+              type="number"
+              placeholder="Horas"
+            />
+
+            <label>Fecha</label>
+            <input class="form-control mb-2" id="fechaTarea" type="date" />
+          </div>
+
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JS -->
+    <script src="/js/actividad.js"></script>
+    <script src="/js/layout.js"></script>
+  </body>
+</html>
