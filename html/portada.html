@@ -2,41 +2,179 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <title>Portada</title>
-    <!-- Estilos generales de portada -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portada | Servicio Social UTM</title>
     <link rel="stylesheet" href="/css/portada.css" />
-    <!-- Estilos del menú lateral -->
     <link rel="stylesheet" href="/css/menu.css" />
-    <!-- Estilos de la barra superior -->
     <link rel="stylesheet" href="/css/topbar.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
   </head>
   <body>
-    <!-- MENU -->
     <div id="menu-container"></div>
 
-    <!-- MAIN -->
     <div class="main">
-      <!-- TOPBAR -->
       <div id="topbar-container"></div>
 
-      <!-- CONTENIDO -->
       <div class="content" id="contenido">
-        <h1>Bienvenido al sistema</h1>
-        <p>Logo</p>
+        <div class="welcome-card">
+          <div class="welcome-icon">
+            <i class="fas fa-university"></i>
+          </div>
 
-        <div
-          style="
-            width: 200px;
-            height: 200px;
-            border: 2px dashed gray;
-            margin: auto;
-          "
-        >
-          LOGO
+          <h1>Bienvenido al Sistema</h1>
+          <p class="subtitle">
+            Gestión de Servicio Social - Universidad Tecnológica de Morelia
+          </p>
+
+          <div class="logo-placeholder">
+            <div class="logos-duo">
+              <div class="logo-side">
+                <img
+                  src="/img/logo-servicio-social.png"
+                  alt="Logo Servicio Social UTM"
+                  class="logo-img servicio-logo"
+                />
+              </div>
+
+              <div class="logo-divider"></div>
+
+              <div class="logo-side logo-utm-side">
+                <img
+                  src="/img/logo-utm.png"
+                  alt="Logo UTM"
+                  class="logo-img utm-logo-portada"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="quick-info" id="quickInfo"></div>
         </div>
       </div>
     </div>
 
+    <script>
+      const rol = (localStorage.getItem("rol") || "").toLowerCase().trim();
+      const infoDiv = document.getElementById("quickInfo");
+
+      if (rol === "administrador" || rol === "director") {
+        infoDiv.innerHTML = `
+      <h2>¿Qué puedes hacer en el sistema?</h2>
+
+      <div class="info-grid">
+        <div class="info-box">
+          <h3><i class="fas fa-users-cog"></i> 1. Gestión de usuarios</h3>
+          <p>
+            Aquí puedes consultar, registrar, editar y administrar
+            los usuarios del sistema según su rol.
+          </p>
+        </div>
+
+        <div class="info-box">
+          <h3><i class="fas fa-layer-group"></i> 2. Gestión de grupos</h3>
+          <p>
+            Aquí puedes consultar los grupos registrados y dar
+            seguimiento general a su organización.
+          </p>
+        </div>
+      </div>
+    `;
+      } else if (rol === "tutor") {
+        infoDiv.innerHTML = `
+      <h2>¿Qué puedes hacer en el sistema?</h2>
+
+      <div class="info-grid">
+        <div class="info-box">
+          <h3><i class="fas fa-folder-open"></i> 1. Proyectos</h3>
+          <p>
+            Consulta los proyectos disponibles para tus alumnos.
+          </p>
+        </div>
+
+        <div class="info-box">
+          <h3><i class="fas fa-user-check"></i> 2. Seguimiento de alumnos</h3>
+          <p>
+            Revisa el avance de los alumnos de tu grupo y consulta
+            su progreso en el servicio social.
+          </p>
+        </div>
+      </div>
+    `;
+      } else if (rol === "alumno") {
+        infoDiv.innerHTML = `
+      <h2>¿Qué puedes hacer en el sistema?</h2>
+
+      <div class="info-grid">
+        <div class="info-box">
+          <h3><i class="fas fa-folder-open"></i> 1. Proyectos</h3>
+          <p>
+            Consulta los proyectos activos e inscríbete en uno o varios
+            para liberar tus 480 horas de servicio social.
+          </p>
+        </div>
+
+        <div class="info-box">
+          <h3><i class="fas fa-chart-bar"></i> 2. Mi progreso</h3>
+          <p>
+            Revisa tus horas acumuladas, tareas cumplidas
+            y el avance de tu servicio social.
+          </p>
+        </div>
+
+        <div class="info-box">
+          <h3><i class="fas fa-id-card"></i> 3. Mi perfil</h3>
+          <p>
+            Consulta o actualiza tu información personal.
+          </p>
+        </div>
+      </div>
+    `;
+      } else if (rol === "responsable") {
+        infoDiv.innerHTML = `
+      <h2>Instrucciones de uso</h2>
+
+      <div class="info-grid">
+        <div class="info-box">
+          <h3><i class="fas fa-folder-plus"></i> 1. Proyectos</h3>
+          <p>
+            Aquí puedes crear, editar y cancelar proyectos.
+            También puedes agregar tareas para completar
+            las horas totales de cada proyecto.
+          </p>
+          <p>
+            Al crear un proyecto, su estatus inicial será
+            <strong>"Pendiente"</strong>. Después de agregar sus tareas,
+            podrás cambiarlo a <strong>"Activa"</strong>.
+          </p>
+        </div>
+
+        <div class="info-box">
+          <h3><i class="fas fa-user-graduate"></i> 2. Seguimiento de alumnos</h3>
+          <p>
+            En este apartado puedes ver a los alumnos inscritos
+            en cada proyecto y revisar su progreso.
+          </p>
+        </div>
+
+        <div class="info-box">
+          <h3><i class="fas fa-address-card"></i> 3. Mi perfil</h3>
+          <p>
+            Aquí puedes actualizar tu información de contacto
+            y tu ubicación para que los alumnos puedan localizarte.
+          </p>
+        </div>
+      </div>
+    `;
+      } else {
+        infoDiv.innerHTML = `
+      <h2>Bienvenido</h2>
+      <p>No se encontró información disponible para este rol.</p>
+    `;
+      }
+    </script>
     <script src="/js/layout.js"></script>
   </body>
 </html>

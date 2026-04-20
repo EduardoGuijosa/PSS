@@ -1,0 +1,232 @@
+/* =========================================================
+   seguimiento.css
+   Este archivo controla la vista de seguimiento:
+   - espaciado general
+   - título principal
+   - tarjetas y tablas
+   - buscador/filtro
+   - modales de alumnos y checklist
+   - botones del checklist
+========================================================= */
+
+/* =========================================================
+   AJUSTES GENERALES DE ESPACIADO
+========================================================= */
+
+/* Ajusta el contenedor principal dentro de la vista content */
+.content .container {
+  /* Reduce el espacio superior del contenedor */
+  margin-top: 10px !important;
+
+  /* Elimina el espacio interno arriba */
+  padding-top: 0 !important;
+}
+
+/* =========================================================
+   TÍTULO PRINCIPAL
+========================================================= */
+
+/* Aplica al título principal cuando usa h2 con clase text-primary */
+h2.text-primary {
+  /* Quita espacio sobrante arriba */
+  margin-top: 0 !important;
+
+  /* Define un tamaño grande pero no exagerado */
+  font-size: 1.8rem;
+}
+
+/* =========================================================
+   TARJETAS Y TABLAS
+========================================================= */
+
+/* Estilo general de las tarjetas Bootstrap usadas en esta vista */
+.card {
+  /* Redondea las esquinas de las tarjetas */
+  border-radius: 14px;
+}
+
+/* Celdas de las tablas del seguimiento */
+.table tbody tr td {
+  /* Centra verticalmente el contenido de las celdas */
+  vertical-align: middle;
+}
+
+/* =========================================================
+   FILTRO
+========================================================= */
+
+/* Input de búsqueda por nombre de proyecto */
+#buscarProyecto {
+  /* Bordes redondeados */
+  border-radius: 10px;
+}
+
+/* Botón para limpiar el filtro del proyecto */
+#btnLimpiarFiltroProyecto {
+  /* Bordes redondeados */
+  border-radius: 10px;
+}
+
+/* =========================================================
+   MODAL DE CHECKLIST
+========================================================= */
+
+/* Caja de explicación arriba del checklist */
+.checklist-info {
+  border-radius: 12px;
+  font-size: 0.92rem;
+  margin-bottom: 14px;
+}
+
+/* Cada fila de tarea dentro del checklist */
+.checklist-item {
+  gap: 14px;
+}
+
+/* Nombre de tarea */
+.checklist-item h6 {
+  font-size: 1.03rem;
+}
+
+/* Texto secundario de horas */
+.checklist-item small {
+  font-size: 0.86rem;
+}
+
+/* =========================================================
+   BOTÓN "CUMPLIDA"
+   - Gris cuando aún no está marcada
+   - Verde con palomita cuando sí está marcada
+   - Nunca cambia a blanco al pasar el mouse
+========================================================= */
+
+.btn-cumplida {
+  min-width: 130px;
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  border: 1px solid transparent;
+  box-shadow: none !important;
+  outline: none !important;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+/* Quitamos el movimiento hover para que no distraiga */
+.btn-cumplida:hover {
+  transform: none;
+}
+
+/* -------------------------
+   ESTADO PENDIENTE: gris
+------------------------- */
+.btn-cumplida-pendiente,
+.btn-cumplida-pendiente:hover,
+.btn-cumplida-pendiente:focus,
+.btn-cumplida-pendiente:focus-visible,
+.btn-cumplida-pendiente:active,
+.btn-cumplida-pendiente.active,
+.btn-check:checked + .btn-cumplida-pendiente,
+.show > .btn-cumplida-pendiente.dropdown-toggle {
+  background: #e5e7eb !important;
+  color: #374151 !important;
+  border-color: #d1d5db !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* -------------------------
+   ESTADO CUMPLIDA: verde
+------------------------- */
+.btn-cumplida-activa,
+.btn-cumplida-activa:hover,
+.btn-cumplida-activa:focus,
+.btn-cumplida-activa:focus-visible,
+.btn-cumplida-activa:active,
+.btn-cumplida-activa.active,
+.btn-check:checked + .btn-cumplida-activa,
+.show > .btn-cumplida-activa.dropdown-toggle {
+  background: #198754 !important;
+  color: #ffffff !important;
+  border-color: #198754 !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* =========================================================
+   MODAL DE ALUMNOS
+========================================================= */
+
+/* Ajuste ligero para el subtítulo del modal */
+#subtituloModalAlumnos,
+#subtituloModalChecklist {
+  font-size: 0.82rem;
+}
+
+/* =========================================================
+   ESTILOS VIEJOS
+   - Se dejan por si más adelante vuelves a usar tarjetas
+========================================================= */
+
+/* Contenedor tipo grid que acomodaba tarjetas en el centro */
+.actividades-grid-centrado {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 320px));
+  gap: 20px;
+  justify-content: center;
+  padding: 20px 0;
+  width: 100%;
+}
+
+/* Tarjeta individual de seguimiento de una versión anterior */
+.card-seguimiento {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  border-top: 5px solid #0d6efd;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s;
+  text-align: center;
+}
+
+/* Efecto hover de la tarjeta antigua */
+.card-seguimiento:hover {
+  transform: translateY(-5px);
+}
+
+/* Título dentro de la tarjeta antigua */
+.card-seguimiento h5 {
+  color: #0d6efd;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* Texto de inscritos dentro de la tarjeta antigua */
+.card-seguimiento .info-inscritos {
+  font-size: 0.9rem;
+  margin: 15px 0;
+  color: #555;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+  h2.text-primary {
+    font-size: 1.5rem;
+  }
+
+  .btn-cumplida {
+    min-width: 115px;
+    padding: 7px 14px;
+    font-size: 0.86rem;
+  }
+
+  .checklist-info {
+    font-size: 0.88rem;
+  }
+}

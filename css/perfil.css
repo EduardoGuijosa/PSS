@@ -1,0 +1,325 @@
+/* =========================================================
+   perfil.css
+   Este archivo controla el diseño de la vista de perfil:
+   - fondo general
+   - contenedor principal del formulario
+   - títulos
+   - distribución en grid
+   - estilos de labels e inputs
+   - botón guardar
+   - responsive
+========================================================= */
+
+/* =========================================================
+   ESTILOS GENERALES DE LA VISTA DE PERFIL
+========================================================= */
+
+/* Estilos para el body de la página */
+body {
+  /* Define la fuente general del sistema */
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+
+  /* Color de fondo gris claro */
+  background: #f4f6f9;
+}
+
+/* =========================================================
+   CONTENEDOR PRINCIPAL DEL PERFIL
+========================================================= */
+
+/* Caja principal donde va todo el formulario del perfil */
+.contenedor-perfil {
+  /* Limita el ancho máximo a 800px para que no se vea demasiado ancho */
+  max-width: 800px;
+
+  /* Margen arriba y abajo de 30px, y centrado horizontal */
+  margin: 30px auto;
+
+  /* Fondo blanco */
+  background: #fff;
+
+  /* Espaciado interno amplio */
+  padding: 40px;
+
+  /* Bordes redondeados */
+  border-radius: 15px;
+
+  /* Sombra suave para dar efecto de tarjeta */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+
+  /* Línea decorativa azul en la parte superior */
+  border-top: 6px solid #0056b3;
+}
+
+/* =========================================================
+   TÍTULO PRINCIPAL
+========================================================= */
+
+/* Estilos para el h2 principal de la vista */
+h2 {
+  /* Centra el texto */
+  text-align: center;
+
+  /* Color azul */
+  color: #0056b3;
+
+  /* Texto más grueso */
+  font-weight: 800;
+
+  /* Espacio debajo del título */
+  margin-bottom: 30px;
+
+  /* Convierte el texto a mayúsculas */
+  text-transform: uppercase;
+
+  /* Espaciado entre letras */
+  letter-spacing: 1px;
+}
+
+/* =========================================================
+   GRID DEL FORMULARIO
+========================================================= */
+
+/* Contenedor grid que organiza los campos en dos columnas */
+.perfil-grid {
+  /* Activa CSS Grid */
+  display: grid;
+
+  /* Crea dos columnas del mismo tamaño */
+  grid-template-columns: 1fr 1fr;
+
+  /* Espacio entre columnas y filas */
+  gap: 20px;
+
+  /* Espacio debajo del grid */
+  margin-bottom: 25px;
+}
+
+/* =========================================================
+   CAMPOS DEL FORMULARIO
+========================================================= */
+
+/* Cada bloque de campo (label + input) */
+.campo {
+  /* Pequeña separación inferior */
+  margin-bottom: 5px;
+}
+
+/* Clase para campos que deben ocupar todo el ancho del grid */
+.full-width {
+  /* Hace que el campo abarque las dos columnas */
+  grid-column: span 2;
+}
+
+/* Etiquetas de los campos */
+.campo label {
+  /* Hace que el label quede en su propia línea */
+  display: block;
+
+  /* Texto en negrita */
+  font-weight: bold;
+
+  /* Espacio debajo del label */
+  margin-bottom: 8px;
+
+  /* Color gris oscuro */
+  color: #2c3e50;
+
+  /* Tamaño pequeño */
+  font-size: 0.85rem;
+
+  /* Convierte el texto a mayúsculas */
+  text-transform: uppercase;
+}
+
+/* Inputs dentro de cada campo */
+.campo input {
+  /* Hace que el input ocupe todo el ancho disponible */
+  width: 100%;
+
+  /* Espaciado interno */
+  padding: 12px 15px;
+
+  /* Bordes redondeados */
+  border-radius: 8px;
+
+  /* Borde gris claro */
+  border: 1px solid #dcdde1;
+
+  /* Tamaño de letra normal */
+  font-size: 1rem;
+
+  /* Fondo casi blanco */
+  background-color: #fcfcfc;
+
+  /* Transición suave al cambiar estilos */
+  transition: all 0.3s ease;
+}
+
+/* =========================================================
+   EFECTO FOCUS EN INPUTS
+========================================================= */
+
+/* Estilos cuando el usuario da clic o selecciona un input */
+.campo input:focus {
+  /* Cambia el color del borde a azul */
+  border-color: #0056b3;
+
+  /* Cambia el fondo a blanco puro */
+  background-color: #fff;
+
+  /* Agrega una sombra azul suave */
+  box-shadow: 0 0 8px rgba(0, 86, 179, 0.15);
+
+  /* Quita el borde azul por defecto del navegador */
+  outline: none;
+}
+
+/* =========================================================
+   INPUTS DESHABILITADOS
+========================================================= */
+
+/* Estilos para campos bloqueados como nombre o correo */
+.campo input:disabled {
+  /* Fondo gris claro */
+  background: #f1f2f6;
+
+  /* Texto gris */
+  color: #7f8c8d;
+
+  /* Cursor de no permitido */
+  cursor: not-allowed;
+
+  /* Borde más claro */
+  border-color: #e1e2e7;
+}
+
+/* =========================================================
+   BOTÓN GUARDAR
+========================================================= */
+
+/* Botón para guardar cambios del perfil */
+.btn-guardar {
+  /* Ocupa todo el ancho */
+  width: 100%;
+
+  /* Espaciado interno */
+  padding: 15px;
+
+  /* Quita borde */
+  border: none;
+
+  /* Fondo azul */
+  background: #0056b3;
+
+  /* Texto blanco */
+  color: white;
+
+  /* Bordes redondeados */
+  border-radius: 8px;
+
+  /* Cursor de mano */
+  cursor: pointer;
+
+  /* Tamaño de letra */
+  font-size: 16px;
+
+  /* Texto en negrita */
+  font-weight: bold;
+
+  /* Texto en mayúsculas */
+  text-transform: uppercase;
+
+  /* Transiciones suaves */
+  transition:
+    background 0.3s,
+    transform 0.2s;
+
+  /* Espacio arriba del botón */
+  margin-top: 10px;
+}
+
+/* Efecto hover del botón guardar */
+.btn-guardar:hover {
+  /* Cambia a un azul más oscuro */
+  background: #004494;
+
+  /* Lo levanta ligeramente */
+  transform: translateY(-2px);
+
+  /* Agrega sombra azul */
+  box-shadow: 0 5px 15px rgba(0, 86, 179, 0.3);
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+/* Ajustes para pantallas pequeñas como celulares */
+@media (max-width: 600px) {
+  /* Hace que el grid pase de 2 columnas a 1 */
+  .perfil-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Los campos full-width ahora solo ocupan una columna */
+  .full-width {
+    grid-column: span 1;
+  }
+
+  /* Reduce márgenes y padding del contenedor para que se adapte al celular */
+  .contenedor-perfil {
+    margin: 15px;
+    padding: 20px;
+  }
+}
+
+.foto-perfil-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 25px;
+}
+
+.foto-perfil-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.foto-perfil-img {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid #0d5db8;
+  background: #f4f6f9;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.foto-perfil-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-foto-label {
+  background: #0d5db8;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s ease;
+}
+
+.btn-foto-label:hover {
+  background: #094a92;
+}
+
+.foto-help-text {
+  color: #6c757d;
+  font-size: 13px;
+  text-align: center;
+}

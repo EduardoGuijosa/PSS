@@ -1,28 +1,540 @@
-body {
-  background-color: #f8f9fa;
-  padding: 20px;
-}
-.card {
-  margin-bottom: 15px;
-}
-.alta {
-  border-left: 5px solid #dc3545;
-}
-.media {
-  border-left: 5px solid #ffc107;
-}
-.baja {
-  border-left: 5px solid #28a745;
-}
-.card {
-  border-radius: 12px;
+/* =========================================================
+   actividad.css
+   Este archivo controla la vista de proyectos/actividades:
+   - acomodo general de la pantalla
+   - resumen superior
+   - filtros tipo tarjetas con cantidad
+   - tarjetas/filas de proyectos
+   - botones de acciones
+   - colores de estatus
+   - ajustes responsivos
+========================================================= */
+
+/* =========================================================
+   FONDO OSCURO DE MODALES
+========================================================= */
+
+/* Fondo oscuro detrás de los modales */
+.modal-backdrop {
+  opacity: 0.5 !important;
 }
 
-.card-body h5 {
-  font-size: 1.4rem;
-  font-weight: bold;
+/* Si por alguna razón queda un backdrop pegado, se oculta */
+body:not(.modal-open) .modal-backdrop {
+  display: none !important;
+}
+
+/* =========================================================
+   ESTRUCTURA GENERAL DE LA VISTA
+========================================================= */
+
+.content {
+  display: block !important;
+  min-height: auto !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  padding-top: 24px !important;
+}
+
+.main {
+  align-items: stretch !important;
 }
 
 .container {
-  max-width: 900px;
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto !important;
+  margin-top: 10px !important;
+  padding-top: 0 !important;
+}
+
+/* =========================================================
+   ENCABEZADO DE LA VISTA
+========================================================= */
+
+.encabezado-vista {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-top: 0 !important;
+  margin-bottom: 18px !important;
+}
+
+.titulo-pagina {
+  margin: 0;
+  font-size: 2.45rem;
+  font-weight: 800;
+  color: #0d5cc0;
+  line-height: 1.1;
+}
+
+.subtitulo-pagina {
+  margin: 6px 0 0;
+  color: #6b7280;
+  font-size: 0.96rem;
+}
+
+.btn-nuevo-proyecto {
+  border-radius: 12px;
+  padding: 11px 18px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   RESUMEN SUPERIOR
+========================================================= */
+
+.resumen-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.resumen-card {
+  background: linear-gradient(135deg, #1f7aff, #0d5cc0);
+  color: #ffffff;
+  border-radius: 20px;
+  padding: 22px 24px;
+  box-shadow: 0 10px 24px rgba(13, 92, 192, 0.16);
+}
+
+.resumen-card .resumen-label {
+  font-size: 1rem;
+  font-weight: 500;
+  opacity: 0.96;
+  margin-bottom: 8px;
+}
+
+.resumen-card .resumen-value {
+  font-size: 2.35rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+/* =========================================================
+   PANEL DE FILTROS
+========================================================= */
+
+.filtros-panel {
+  margin-bottom: 20px;
+}
+
+.filtros-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+/* =========================================================
+   FILTROS TIPO TARJETA
+========================================================= */
+
+.filtro-card {
+  border: none;
+  border-radius: 18px;
+  padding: 18px 20px;
+  color: #ffffff;
+  text-align: left;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    filter 0.18s ease;
+}
+
+.filtro-card:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.02);
+}
+
+.filtro-card.activo {
+  outline: 3px solid rgba(255, 255, 255, 0.55);
+  transform: scale(1.01);
+}
+
+.filtro-card .filtro-label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.filtro-card .filtro-value {
+  display: block;
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.filtro-todos {
+  background: linear-gradient(135deg, #1f7aff, #0d5cc0);
+}
+
+.filtro-pendiente {
+  background: linear-gradient(135deg, #f3b400, #da9a00);
+}
+
+.filtro-activa {
+  background: linear-gradient(135deg, #1ca463, #168651);
+}
+
+.filtro-finalizada {
+  background: linear-gradient(135deg, #17a2b8, #11798a);
+}
+
+.filtro-cancelada {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+/* =========================================================
+   BUSCADOR
+========================================================= */
+
+.buscador input {
+  max-width: 380px;
+  border-radius: 12px;
+  border: 1px solid #d7dee8;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  padding: 10px 14px;
+}
+
+.buscador input:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.22rem rgba(13, 110, 253, 0.15);
+}
+
+/* =========================================================
+   LISTA DE ACTIVIDADES
+========================================================= */
+
+#listaActividades {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0 0 18px;
+  width: 100%;
+  min-height: 0 !important;
+  height: auto !important;
+}
+
+/* =========================================================
+   TARJETA / FILA DE ACTIVIDAD
+========================================================= */
+
+.actividad-row {
+  background: #ffffff;
+  border-radius: 18px;
+  border-left: 5px solid #0d6efd;
+  padding: 18px 20px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  transition:
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.actividad-row:hover {
+  background-color: #f8fbff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.actividad-row.actividad-inscrita {
+  opacity: 0.7;
+}
+
+.actividad-grid {
+  display: grid;
+  grid-template-columns: 2.2fr 1fr 0.75fr 0.75fr 0.9fr 0.9fr 0.9fr auto;
+  gap: 18px;
+  align-items: center;
+}
+
+/* =========================================================
+   COLUMNA PRINCIPAL DEL PROYECTO
+========================================================= */
+
+.col-proyecto .label-col,
+.col-info .label-col {
+  display: block;
+  color: #0d5cc0;
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 5px;
+}
+
+.col-proyecto .nombre-proyecto {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: #1f2937;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+.col-proyecto .descripcion-proyecto {
+  color: #6b7280;
+  font-size: 0.94rem;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+/* =========================================================
+   COLUMNAS SECUNDARIAS
+========================================================= */
+
+.col-info .valor-col {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2d3436;
+  word-break: break-word;
+}
+
+/* =========================================================
+   BADGES / PILLS DE ESTATUS
+========================================================= */
+
+.status-pill {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.status-activa {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-pendiente {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-finalizada {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.status-cancelada {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* =========================================================
+   BOTONES DE ACCIÓN
+========================================================= */
+
+.btn-acciones-tabla {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.btn-tabla {
+  padding: 9px 14px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition:
+    opacity 0.2s ease,
+    transform 0.18s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 88px;
+}
+
+.btn-tabla:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.btn-tabla:disabled {
+  cursor: not-allowed;
+  opacity: 0.75;
+  transform: none;
+}
+
+.btn-ver {
+  background: #17a2b8;
+  color: #ffffff;
+}
+
+.btn-edit {
+  background: #ffc107;
+  color: #2d3436;
+}
+
+.btn-del {
+  background: #dc3545;
+  color: #ffffff;
+}
+
+.btn-unirme {
+  background: #28a745;
+  color: #ffffff;
+}
+
+.btn-inscrito {
+  background: #198754;
+  color: #ffffff;
+}
+
+.btn-no-disponible,
+.btn-cupo-lleno {
+  background: #6c757d;
+  color: #ffffff;
+}
+
+/* =========================================================
+   MENSAJE VACÍO
+========================================================= */
+
+#sinActividades {
+  border-radius: 14px;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1400px) {
+  .actividad-grid {
+    grid-template-columns: 2fr 1fr 0.8fr 0.8fr 1fr 1fr 1fr;
+  }
+
+  .btn-acciones-tabla {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+    padding-top: 6px;
+  }
+}
+
+@media (max-width: 992px) {
+  .titulo-pagina {
+    font-size: 2rem;
+  }
+
+  .actividad-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .col-proyecto {
+    grid-column: 1 / -1;
+  }
+
+  .btn-acciones-tabla {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .encabezado-vista {
+    align-items: flex-start;
+  }
+
+  .titulo-pagina {
+    font-size: 1.75rem;
+  }
+
+  .subtitulo-pagina {
+    font-size: 0.9rem;
+  }
+
+  .resumen-grid,
+  .filtros-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .actividad-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .btn-acciones-tabla {
+    justify-content: stretch;
+  }
+
+  .btn-tabla {
+    width: 100%;
+  }
+
+  .buscador input {
+    max-width: 100%;
+  }
+}
+
+#resumenProyectos:empty {
+  display: none;
+  margin: 0;
+  padding: 0;
+}
+/* =========================================================
+   BARRA DE PROGRESO DE PROYECTO
+========================================================= */
+.bloque-progreso-proyecto {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid #edf1f5;
+}
+
+.progreso-proyecto-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.progreso-proyecto-label {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #1f2937;
+}
+
+.progreso-proyecto-valor {
+  font-size: 0.92rem;
+  font-weight: 900;
+  color: #0d47a1;
+}
+
+.barra-progreso-proyecto-bg {
+  width: 100%;
+  height: 14px;
+  background: #e9eef4;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.barra-progreso-proyecto-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.35s ease;
+}
+
+.progreso-activa {
+  background: linear-gradient(90deg, #2f80ed, #1f66d1);
+}
+
+.progreso-finalizada {
+  background: linear-gradient(90deg, #22a35a, #1c8a4c);
+}
+
+.progreso-cancelada {
+  background: linear-gradient(90deg, #e74c3c, #cf3e30);
+}
+
+.progreso-pendiente {
+  background: linear-gradient(90deg, #f2b600, #d89d00);
 }

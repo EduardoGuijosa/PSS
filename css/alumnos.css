@@ -1,90 +1,585 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
+/* =========================================================
+   alumnos.css
+   Este archivo controla la vista de alumnos:
+   - encabezado principal
+   - tarjetas resumen
+   - ahora también usadas como filtros
+   - tabla de alumnos
+   - bloques visuales
+   - actividades del alumno
+   - responsive
+========================================================= */
+
+/* =========================================================
+   AJUSTES GENERALES
+========================================================= */
+
+/* Ajusta el contenedor principal dentro de la sección content */
+.content .container {
+  /* Reduce el espacio superior del contenedor */
+  margin-top: 10px !important;
+
+  /* Elimina espacio interno arriba */
+  padding-top: 0 !important;
 }
 
-body {
-  background-color: #f2f2f2;
+/* Contenedor general de la vista de alumnos */
+.alumnos-wrapper {
+  /* Limita el ancho máximo para que el contenido no se estire demasiado */
+  max-width: 1200px;
+
+  /* Centra horizontalmente el contenido */
+  margin: 0 auto;
 }
 
-/* Barra superior */
-.topbar {
-  background-color: #b7cbd8;
+/* =========================================================
+   ENCABEZADO
+========================================================= */
+
+/* Botón para regresar a la vista anterior */
+.btn-regresar {
+  /* Redondea las esquinas del botón */
+  border-radius: 10px;
+
+  /* Agrega espacio interno */
+  padding: 10px 16px;
+}
+
+/* Título principal de la página */
+.titulo-pagina {
+  /* Tamaño grande de fuente */
+  font-size: 2rem;
+
+  /* Hace el texto más grueso */
+  font-weight: 700;
+
+  /* Color azul oscuro */
+  color: #0d47a1;
+}
+
+/* Texto secundario debajo del título */
+.subtitulo-pagina {
+  /* Color gris */
+  color: #6b7280;
+
+  /* Tamaño de letra ligeramente menor */
+  font-size: 0.95rem;
+}
+
+/* =========================================================
+   TARJETAS RESUMEN
+   Ahora también funcionan como filtros clickeables
+========================================================= */
+
+/* Tarjetas que muestran total, liberados y pendientes */
+.resumen-card {
+  /* Usa flex para alinear icono y texto en una misma fila */
   display: flex;
-  justify-content: space-between;
-  padding: 15px 30px;
+
+  /* Centra verticalmente el contenido */
   align-items: center;
-}
 
-.dots {
-  font-size: 20px;
-}
+  /* Espacio entre icono y texto */
+  gap: 16px;
 
-.user-info {
-  display: flex;
-  gap: 20px;
-  font-weight: bold;
-}
-
-.user-info a {
-  text-decoration: none;
-  color: black;
-}
-
-/* Contenedor principal */
-.container {
-  width: 90%;
-  margin: 40px auto;
-}
-
-h1 {
-  text-align: center;
-  margin-bottom: 30px;
-  font-size: 32px;
-}
-
-/* Layout */
-.content {
-  display: flex;
-  gap: 30px;
-}
-
-/* Lista alumnos */
-.students {
-  flex: 2;
-}
-
-/* Tarjetas */
-.card {
-  background-color: white;
-  border: 1px solid #ccc;
+  /* Espaciado interno de la tarjeta */
   padding: 20px;
-  margin-bottom: 20px;
+
+  /* Bordes redondeados */
+  border-radius: 16px;
+
+  /* Texto blanco */
+  color: white;
+
+  /* Sombra suave para dar efecto de elevación */
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+
+  /* Altura mínima para que todas las tarjetas se vean parejas */
+  min-height: 110px;
+
+  /* Ocupar todo el ancho de su columna */
+  width: 100%;
+
+  /* Sin borde visual de botón */
+  border: none;
 }
 
-.card-header {
+/* Texto pequeño dentro de las tarjetas resumen */
+.resumen-card small {
+  /* Hace que se vea en su propia línea */
+  display: block;
+
+  /* Tamaño pequeño */
+  font-size: 0.9rem;
+
+  /* Le baja un poco la intensidad */
+  opacity: 0.9;
+}
+
+/* Número grande dentro de la tarjeta resumen */
+.resumen-card h3 {
+  /* Margen arriba pequeño y sin margen inferior exagerado */
+  margin: 4px 0 0;
+
+  /* Tamaño grande */
+  font-size: 2rem;
+
+  /* Texto grueso */
+  font-weight: 700;
+}
+
+/* Caja donde va el icono de la tarjeta resumen */
+.resumen-icono {
+  /* Ancho fijo */
+  width: 54px;
+
+  /* Alto fijo */
+  height: 54px;
+
+  /* Bordes redondeados */
+  border-radius: 14px;
+
+  /* Usa flex para centrar el icono */
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  justify-content: center;
+
+  /* Fondo blanco translúcido */
+  background: rgba(255, 255, 255, 0.18);
+
+  /* Tamaño del icono */
+  font-size: 1.4rem;
+
+  /* Evita que se encoja */
+  flex-shrink: 0;
 }
 
-.card button {
-  padding: 5px 10px;
-  border: 1px solid black;
-  background-color: #eee;
+/* Contenedor del texto de la tarjeta */
+.resumen-contenido {
+  text-align: left;
+}
+
+/* Tarjeta resumen color azul */
+.resumen-azul {
+  /* Fondo degradado azul */
+  background: linear-gradient(135deg, #0d6efd, #0b57d0);
+}
+
+/* Tarjeta resumen color verde */
+.resumen-verde {
+  /* Fondo degradado verde */
+  background: linear-gradient(135deg, #198754, #157347);
+}
+
+/* Tarjeta resumen color amarillo */
+.resumen-amarillo {
+  /* Fondo degradado amarillo/dorado */
+  background: linear-gradient(135deg, #f0ad00, #d99800);
+}
+
+/* =========================================================
+   TARJETAS RESUMEN COMO FILTRO
+========================================================= */
+
+/* Estilo específico cuando la tarjeta funciona como botón */
+.resumen-filtro {
+  /* Cursor tipo mano */
   cursor: pointer;
+
+  /* Animaciones suaves */
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    outline 0.2s ease,
+    filter 0.2s ease;
 }
 
-.card button:hover {
-  background-color: #ddd;
+/* Hover de tarjetas-filtro */
+.resumen-filtro:hover {
+  /* Levanta ligeramente */
+  transform: translateY(-3px);
+
+  /* Sombra más fuerte */
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.12);
+
+  /* Hace un poco más brillante la tarjeta */
+  filter: brightness(1.03);
 }
 
-/* Panel lateral */
-.side-panel {
-  flex: 1;
-  background-color: #e0e0e0;
-  height: 500px;
+/* Estado activo del filtro */
+.resumen-filtro.activo {
+  /* Marca visual clara de selección */
+  outline: 4px solid rgba(255, 255, 255, 0.7);
+
+  /* Sombra más fuerte */
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.16);
+
+  /* Pequeño crecimiento */
+  transform: scale(1.01);
+}
+
+/* Quita contorno feo del navegador al enfocar */
+.resumen-filtro:focus {
+  outline: none;
+}
+
+/* =========================================================
+   ALERTA SIN ALUMNOS
+========================================================= */
+
+/* Caja de aviso cuando no hay alumnos */
+.alerta-vacia {
+  /* Bordes redondeados */
+  border-radius: 14px;
+
+  /* Sin borde visible */
+  border: none;
+
+  /* Fondo azul claro */
+  background: #eef5ff;
+
+  /* Texto azul */
+  color: #0b57d0;
+
+  /* Espaciado interno */
+  padding: 18px;
+}
+
+/* =========================================================
+   TARJETAS DE ALUMNOS
+   Nota:
+   Estas clases probablemente se usaron en una versión anterior
+   con tarjetas. Aunque ahora uses tabla, pueden quedarse por si
+   luego vuelves a esa vista.
+========================================================= */
+
+/* Tarjeta individual del alumno */
+.alumno-card {
+  /* Bordes redondeados */
+  border-radius: 18px;
+
+  /* Oculta cualquier contenido que se salga */
+  overflow: hidden;
+
+  /* Transiciones suaves */
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* Efecto hover de la tarjeta */
+.alumno-card:hover {
+  /* Levanta ligeramente la tarjeta */
+  transform: translateY(-4px);
+
+  /* Sombra más marcada */
+  box-shadow: 0 14px 30px rgba(13, 110, 253, 0.12) !important;
+}
+
+/* Cuerpo interno de la tarjeta */
+.alumno-card .card-body {
+  /* Espaciado interno */
+  padding: 22px;
+}
+
+/* Nombre del alumno */
+.alumno-nombre {
+  /* Tamaño de fuente */
+  font-size: 1.25rem;
+
+  /* Texto grueso */
+  font-weight: 700;
+
+  /* Azul oscuro */
+  color: #0d47a1;
+}
+
+/* Matrícula del alumno */
+.alumno-matricula {
+  /* Gris */
+  color: #6b7280;
+
+  /* Tamaño mediano */
+  font-size: 0.95rem;
+
+  /* Peso seminegrita */
+  font-weight: 600;
+}
+
+/* Estilo base del badge de estatus */
+.estado-badge {
+  /* Espaciado interno */
+  padding: 8px 12px;
+
+  /* Bordes muy redondeados */
+  border-radius: 999px;
+
+  /* Tamaño pequeño */
+  font-size: 0.78rem;
+
+  /* Texto grueso */
+  font-weight: 700;
+}
+
+/* Estatus cuando el alumno ya está liberado */
+.estado-liberado {
+  /* Fondo verde claro */
+  background: #d1f7df;
+
+  /* Texto verde oscuro */
+  color: #146c43;
+}
+
+/* Estatus cuando el alumno sigue pendiente */
+.estado-pendiente {
+  /* Fondo amarillo claro */
+  background: #fff3cd;
+
+  /* Texto amarillo oscuro */
+  color: #8a6d00;
+}
+
+/* =========================================================
+   BLOQUES INTERNOS
+========================================================= */
+
+/* Bloque con información general del alumno */
+.info-alumno {
+  /* Fondo azul muy claro */
+  background: #f8fbff;
+
+  /* Borde azul claro */
+  border: 1px solid #e6eef8;
+
+  /* Bordes redondeados */
+  border-radius: 12px;
+
+  /* Espaciado interno */
+  padding: 14px;
+}
+
+/* Bloque visual para las horas */
+.bloque-horas {
+  /* Fondo blanco */
+  background: #ffffff;
+
+  /* Borde gris claro */
+  border: 1px solid #edf1f5;
+
+  /* Bordes redondeados */
+  border-radius: 12px;
+
+  /* Espaciado interno */
+  padding: 14px;
+}
+
+/* Texto destacado de horas */
+.horas-texto {
+  /* Hace el texto más grueso */
+  font-weight: 700;
+}
+
+/* Bloque de actividades del alumno */
+.bloque-actividades {
+  /* Fondo gris muy claro */
+  background: #f9fafb;
+
+  /* Borde gris claro */
+  border: 1px solid #edf1f5;
+
+  /* Bordes redondeados */
+  border-radius: 12px;
+
+  /* Espaciado interno */
+  padding: 14px;
+}
+
+/* Título del bloque de actividades */
+.titulo-actividades {
+  /* Color azul */
+  color: #0d47a1;
+
+  /* Texto grueso */
+  font-weight: 700;
+}
+
+/* =========================================================
+   ACTIVIDADES DEL ALUMNO
+========================================================= */
+
+/* Caja de una actividad individual */
+.actividad-item {
+  /* Bordes redondeados */
+  border-radius: 10px;
+
+  /* Espaciado interno */
+  padding: 10px 12px;
+
+  /* Espacio debajo entre actividades */
+  margin-bottom: 8px;
+
+  /* Tamaño de texto */
+  font-size: 0.92rem;
+}
+
+/* Actividad completa */
+.actividad-item.completa {
+  /* Fondo verde claro */
+  background: #eafaf0;
+
+  /* Texto verde */
+  color: #157347;
+}
+
+/* Actividad en proceso */
+.actividad-item.proceso {
+  /* Fondo amarillo claro */
+  background: #fff8e1;
+
+  /* Texto amarillo oscuro */
+  color: #8a6d00;
+}
+
+/* Texto cuando no hay actividades */
+.actividad-vacia {
+  /* Color gris */
+  color: #6b7280;
+
+  /* Tamaño de fuente */
+  font-size: 0.92rem;
+
+  /* Letra cursiva */
+  font-style: italic;
+}
+
+/* =========================================================
+   TABLA DE ALUMNOS
+========================================================= */
+
+/* Tabla principal de alumnos */
+.tabla-alumnos {
+  /* Elimina margen inferior sobrante */
+  margin-bottom: 0;
+}
+
+/* Encabezados de la tabla */
+.tabla-alumnos thead th {
+  /* Texto azul */
+  color: #0d47a1;
+
+  /* Texto grueso */
+  font-weight: 700;
+
+  /* Evita que los encabezados se partan en varias líneas */
+  white-space: nowrap;
+}
+
+/* Celdas del cuerpo de la tabla */
+.tabla-alumnos tbody td {
+  /* Centra verticalmente el contenido */
+  vertical-align: middle;
+
+  /* Espacio arriba */
+  padding-top: 16px;
+
+  /* Espacio abajo */
+  padding-bottom: 16px;
+}
+
+/* Nombre del alumno dentro de la tabla */
+.nombre-tabla {
+  /* Tamaño de fuente */
+  font-size: 1rem;
+
+  /* Texto grueso */
+  font-weight: 700;
+}
+
+/* =========================================================
+   ACTIVIDADES DENTRO DE LA TABLA
+========================================================= */
+
+/* Caja pequeña de actividad dentro de la celda */
+.actividad-mini {
+  /* Bordes redondeados */
+  border-radius: 8px;
+
+  /* Espaciado interno */
+  padding: 6px 10px;
+
+  /* Espacio entre actividades */
+  margin-bottom: 6px;
+
+  /* Tamaño de letra pequeño */
+  font-size: 0.85rem;
+
+  /* Altura de línea para mejor lectura */
+  line-height: 1.4;
+}
+
+/* Actividad mini completada */
+.actividad-mini.completa {
+  /* Fondo verde claro */
+  background: #eafaf0;
+
+  /* Texto verde */
+  color: #157347;
+}
+
+/* Actividad mini en proceso */
+.actividad-mini.proceso {
+  /* Fondo amarillo claro */
+  background: #fff8e1;
+
+  /* Texto amarillo oscuro */
+  color: #8a6d00;
+}
+
+/* =========================================================
+   BUSCADOR DE ALUMNOS
+========================================================= */
+
+/* Input de búsqueda de alumnos */
+#buscarAlumno {
+  /* Bordes redondeados */
+  border-radius: 10px;
+}
+
+/* Botón para limpiar búsqueda */
+#btnLimpiarBusquedaAlumno {
+  /* Bordes redondeados */
+  border-radius: 10px;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+  /* Reduce el tamaño del título en pantallas pequeñas */
+  .titulo-pagina {
+    font-size: 1.5rem;
+  }
+
+  /* Reduce el tamaño del número grande de las tarjetas resumen */
+  .resumen-card h3 {
+    font-size: 1.6rem;
+  }
+
+  /* Reduce el padding interno de las tarjetas de alumno */
+  .alumno-card .card-body {
+    padding: 18px;
+  }
+
+  /* En móvil, acomodo más compacto del resumen */
+  .resumen-card {
+    min-height: 96px;
+    padding: 18px;
+  }
+
+  .resumen-icono {
+    width: 48px;
+    height: 48px;
+    font-size: 1.2rem;
+  }
 }

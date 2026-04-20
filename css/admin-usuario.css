@@ -1,0 +1,163 @@
+.content .container {
+  margin-top: 10px !important;
+  padding-top: 0 !important;
+}
+
+.admin-header {
+  margin-bottom: 24px;
+}
+
+.admin-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #0d47a1;
+  margin-bottom: 6px;
+}
+
+.admin-subtitle {
+  color: #6b7280;
+  font-size: 0.97rem;
+  margin-bottom: 0;
+}
+
+.admin-card {
+  width: 100%;
+  min-height: 145px;
+  border: none;
+  border-radius: 18px;
+  padding: 20px;
+  color: #ffffff;
+  text-align: left;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    outline 0.18s ease,
+    filter 0.18s ease;
+}
+
+.admin-card:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.02);
+}
+
+.admin-card.active {
+  outline: 4px solid rgba(255, 255, 255, 0.65);
+  transform: scale(1.01);
+}
+
+.admin-card-label {
+  display: block;
+  font-size: 0.95rem;
+  opacity: 0.92;
+  margin-bottom: 6px;
+}
+
+.admin-card strong {
+  display: block;
+  font-size: 1.35rem;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.admin-card small {
+  display: block;
+  font-size: 0.85rem;
+  opacity: 0.95;
+}
+
+.admin-card-alumno {
+  background: linear-gradient(135deg, #0d6efd, #0b57d0);
+}
+
+.admin-card-tutor {
+  background: linear-gradient(135deg, #198754, #157347);
+}
+
+.admin-card-responsable {
+  background: linear-gradient(135deg, #17a2b8, #11798a);
+}
+
+.admin-card-subdirector {
+  background: linear-gradient(135deg, #6f42c1, #5a32a3);
+}
+
+#formularioAdminContainer .form-label {
+  font-weight: 700;
+}
+
+#formularioAdminContainer .form-control,
+#formularioAdminContainer .form-select,
+#buscarRegistroAdmin {
+  border-radius: 10px;
+}
+
+.admin-form-note {
+  background: #f8fbff;
+  border: 1px solid #dfeafc;
+  color: #0d47a1;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 0.92rem;
+  margin-bottom: 18px;
+}
+
+.admin-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.admin-actions .btn {
+  min-width: 160px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+#alertaAdmin {
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.tabla-admin-usuarios {
+  margin-bottom: 0;
+}
+
+.tabla-admin-usuarios thead th {
+  color: #0d47a1;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.tabla-admin-usuarios tbody td {
+  vertical-align: middle;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+#btnNuevoRegistro,
+#btnLimpiarBusquedaAdmin,
+#btnCerrarFormulario {
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .admin-title {
+    font-size: 1.7rem;
+  }
+
+  .admin-card {
+    min-height: 125px;
+    padding: 18px;
+  }
+
+  .admin-card strong {
+    font-size: 1.15rem;
+  }
+
+  .admin-actions .btn {
+    width: 100%;
+  }
+}

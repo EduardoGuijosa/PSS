@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestión de Grupos | Servicio Social</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="/css/portada.css" />
+    <link rel="stylesheet" href="/css/menu.css" />
+    <link rel="stylesheet" href="/css/topbar.css" />
+    <link rel="stylesheet" href="/css/admin-grupos.css" />
+  </head>
+
+  <body>
+    <div id="menu-container"></div>
+
+    <div class="main">
+      <div id="topbar-container"></div>
+
+      <div class="content">
+        <div class="container mt-4">
+          <!-- =========================================================
+               ENCABEZADO
+          ========================================================= -->
+          <div class="admin-grupos-header mb-4">
+            <h1 class="titulo-admin-grupos">Gestión de Grupos</h1>
+            <p class="subtitulo-admin-grupos mb-0">
+              Administra los grupos, asigna tutor y define el periodo de
+              servicio social para cada grupo.
+            </p>
+          </div>
+
+          <!-- =========================================================
+               RESUMEN SUPERIOR
+          ========================================================= -->
+          <div class="row g-3 mb-4">
+            <div class="col-md-4">
+              <div class="resumen-card resumen-azul">
+                <div class="resumen-icono">📚</div>
+                <div>
+                  <small>Total de grupos</small>
+                  <h3 id="totalGrupos">0</h3>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="resumen-card resumen-verde">
+                <div class="resumen-icono">👨‍🏫</div>
+                <div>
+                  <small>Con tutor asignado</small>
+                  <h3 id="gruposConTutor">0</h3>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="resumen-card resumen-amarillo">
+                <div class="resumen-icono">📅</div>
+                <div>
+                  <small>Con periodo definido</small>
+                  <h3 id="gruposConPeriodo">0</h3>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- =========================================================
+               FILTROS
+          ========================================================= -->
+          <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-white py-3">
+              <h5 class="mb-0">Filtros</h5>
+            </div>
+
+            <div class="card-body">
+              <div class="row g-3 align-items-end">
+                <div class="col-md-4">
+                  <label for="buscarGrupo" class="form-label fw-bold">
+                    Buscar grupo
+                  </label>
+                  <input
+                    type="text"
+                    id="buscarGrupo"
+                    class="form-control"
+                    placeholder="Ej: 5A, 5B, 5C..."
+                  />
+                </div>
+
+                <div class="col-md-3">
+                  <label for="filtroCuatrimestre" class="form-label fw-bold">
+                    Cuatrimestre
+                  </label>
+                  <select id="filtroCuatrimestre" class="form-select">
+                    <option value="">Todos</option>
+                  </select>
+                </div>
+
+                <div class="col-md-3">
+                  <label for="filtroTutor" class="form-label fw-bold">
+                    Estado de tutor
+                  </label>
+                  <select id="filtroTutor" class="form-select">
+                    <option value="">Todos</option>
+                    <option value="con_tutor">Con tutor</option>
+                    <option value="sin_tutor">Sin tutor</option>
+                  </select>
+                </div>
+
+                <div class="col-md-2">
+                  <button
+                    type="button"
+                    id="btnLimpiarFiltrosGrupos"
+                    class="btn btn-outline-secondary w-100"
+                  >
+                    Limpiar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- =========================================================
+               TABLA DE GRUPOS
+          ========================================================= -->
+          <div class="card shadow-sm border-0">
+            <div
+              class="card-header bg-white py-3 d-flex justify-content-between align-items-center"
+            >
+              <h5 class="mb-0">Grupos Registrados</h5>
+            </div>
+
+            <div class="card-body">
+              <div id="alertaGrupos" class="alert d-none" role="alert"></div>
+
+              <div class="table-responsive">
+                <table
+                  class="table table-hover align-middle tabla-grupos-admin"
+                >
+                  <thead class="table-light">
+                    <tr>
+                      <th>Grupo</th>
+                      <th>Turno</th>
+                      <th>Cuatrimestre</th>
+                      <th>Tutor asignado</th>
+                      <th>Inicio servicio</th>
+                      <th>Término servicio</th>
+                      <th class="text-center">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody id="listaGruposAdmin">
+                    <tr>
+                      <td colspan="7" class="text-center text-muted py-4">
+                        Cargando grupos...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         MODAL EDITAR GRUPO
+    ========================================================= -->
+    <div
+      class="modal fade"
+      id="modalGrupo"
+      tabindex="-1"
+      aria-labelledby="modalGrupoLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <form id="formGrupo" class="modal-content border-0 shadow">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title" id="modalGrupoLabel">Configurar Grupo</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Cerrar"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <input type="hidden" id="grupoId" />
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">Grupo</label>
+              <input
+                type="text"
+                id="grupoNombre"
+                class="form-control"
+                readonly
+              />
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">Turno</label>
+              <input
+                type="text"
+                id="grupoTurno"
+                class="form-control"
+                readonly
+              />
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">Cuatrimestre</label>
+              <input
+                type="text"
+                id="grupoCuatrimestre"
+                class="form-control"
+                readonly
+              />
+            </div>
+
+            <hr />
+
+            <div class="mb-3">
+              <label for="selectTutorGrupo" class="form-label fw-bold">
+                Tutor asignado
+              </label>
+              <select id="selectTutorGrupo" class="form-select">
+                <option value="">Selecciona un tutor</option>
+              </select>
+              <small class="text-muted">
+                Aquí se asigna o cambia el tutor responsable del grupo.
+              </small>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label
+                  for="fechaInicioServicioGrupo"
+                  class="form-label fw-bold"
+                >
+                  Fecha de inicio
+                </label>
+                <input
+                  type="date"
+                  id="fechaInicioServicioGrupo"
+                  class="form-control"
+                />
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label
+                  for="fechaTerminoServicioGrupo"
+                  class="form-label fw-bold"
+                >
+                  Fecha de término
+                </label>
+                <input
+                  type="date"
+                  id="fechaTerminoServicioGrupo"
+                  class="form-control"
+                />
+              </div>
+            </div>
+
+            <div class="alert alert-light border small mb-0">
+              El periodo de servicio se definirá a nivel grupo para evitar
+              repetir las mismas fechas en cada alumno.
+            </div>
+          </div>
+
+          <div class="modal-footer bg-light">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+
+            <button type="submit" class="btn btn-primary">
+              Guardar cambios
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/layout.js"></script>
+    <script src="/js/admin-grupos.js"></script>
+  </body>
+</html>

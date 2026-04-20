@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mi Perfil | Servicio Social</title>
+
+    <link rel="stylesheet" href="/css/portada.css" />
+    <link rel="stylesheet" href="/css/menu.css" />
+    <link rel="stylesheet" href="/css/topbar.css" />
+    <link rel="stylesheet" href="/css/perfil.css" />
+  </head>
+
+  <body>
+    <div id="menu-container"></div>
+
+    <div class="main">
+      <div id="topbar-container"></div>
+
+      <div class="content">
+        <div class="contenedor-perfil">
+          <h2>Mi Perfil</h2>
+
+          <!-- FOTO DE PERFIL SOLO PARA ALUMNO -->
+          <div
+            id="fotoPerfilContainer"
+            class="foto-perfil-container"
+            style="display: none"
+          >
+            <div class="foto-perfil-box">
+              <img
+                id="previewFotoPerfil"
+                src="/img/default-user.png"
+                alt="Foto de perfil"
+                class="foto-perfil-img"
+              />
+
+              <div class="foto-perfil-actions">
+                <label for="fotoPerfil" class="btn-foto-label"
+                  >Seleccionar foto</label
+                >
+                <input type="file" id="fotoPerfil" accept="image/*" hidden />
+                <small class="foto-help-text"
+                  >Formatos permitidos: JPG, PNG, WEBP</small
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="perfil-grid">
+            <div class="campo">
+              <label>Nombre</label>
+              <input type="text" id="nombre" disabled readonly />
+            </div>
+
+            <div class="campo">
+              <label>Correo</label>
+              <input type="email" id="correo" disabled readonly />
+            </div>
+
+            <div class="campo">
+              <label>Teléfono</label>
+              <input
+                type="text"
+                id="telefono"
+                placeholder="Tu número de contacto"
+              />
+            </div>
+
+            <div class="campo" id="ubicacionContainer">
+              <label>Ubicación</label>
+              <input type="text" id="ubicacion" placeholder="Ej: Cubículo B1" />
+            </div>
+
+            <div class="campo" id="grupoContainer" style="display: none">
+              <label>Grupo</label>
+              <input type="text" id="grupo" disabled readonly />
+            </div>
+
+            <div class="campo full-width">
+              <label>Nueva Contraseña</label>
+              <input
+                type="password"
+                id="password"
+                placeholder="Deja en blanco si no deseas cambiarla"
+              />
+            </div>
+
+            <div id="fechasContainer" class="full-width" style="display: none">
+              <div class="perfil-grid" style="margin-bottom: 0; gap: 20px">
+                <div class="campo">
+                  <label>Fecha inicio</label>
+                  <input type="date" id="fecha_inicio" disabled readonly />
+                </div>
+
+                <div class="campo">
+                  <label>Fecha término</label>
+                  <input type="date" id="fecha_fin" disabled readonly />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn-guardar" onclick="guardarPerfil()">
+            Guardar cambios
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="/js/layout.js"></script>
+    <script src="/js/perfil.js"></script>
+  </body>
+</html>

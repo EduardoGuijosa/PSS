@@ -1,0 +1,197 @@
+/* =========================================================
+   admin-grupos.css
+   Este archivo controla la vista de gestión de grupos:
+   - encabezado
+   - tarjetas resumen
+   - filtros
+   - tabla
+   - modal
+   - responsive
+========================================================= */
+
+/* =========================================================
+   AJUSTES GENERALES
+========================================================= */
+
+.content .container {
+  margin-top: 10px !important;
+  padding-top: 0 !important;
+}
+
+/* =========================================================
+   ENCABEZADO
+========================================================= */
+
+.titulo-admin-grupos {
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: #0d47a1;
+  margin-bottom: 6px;
+}
+
+.subtitulo-admin-grupos {
+  color: #6b7280;
+  font-size: 0.96rem;
+}
+
+/* =========================================================
+   TARJETAS RESUMEN
+========================================================= */
+
+.resumen-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  border-radius: 18px;
+  color: #ffffff;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+  min-height: 110px;
+}
+
+.resumen-card small {
+  display: block;
+  font-size: 0.92rem;
+  opacity: 0.92;
+}
+
+.resumen-card h3 {
+  margin: 4px 0 0;
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.resumen-icono {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.resumen-azul {
+  background: linear-gradient(135deg, #0d6efd, #0b57d0);
+}
+
+.resumen-verde {
+  background: linear-gradient(135deg, #198754, #157347);
+}
+
+.resumen-amarillo {
+  background: linear-gradient(135deg, #f0ad00, #d99800);
+}
+
+/* =========================================================
+   FILTROS
+========================================================= */
+
+#buscarGrupo,
+#filtroCuatrimestre,
+#filtroTutor,
+#btnLimpiarFiltrosGrupos {
+  border-radius: 10px;
+}
+
+/* =========================================================
+   TABLA
+========================================================= */
+
+.tabla-grupos-admin {
+  margin-bottom: 0;
+}
+
+.tabla-grupos-admin thead th {
+  color: #0d47a1;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.tabla-grupos-admin tbody td {
+  vertical-align: middle;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.nombre-grupo-tabla {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #0d47a1;
+}
+
+.meta-grupo-tabla {
+  color: #6b7280;
+  font-size: 0.86rem;
+}
+
+.badge-tutor {
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.badge-tutor-asignado {
+  background: #d1f7df;
+  color: #146c43;
+}
+
+.badge-tutor-sin {
+  background: #fff3cd;
+  color: #8a6d00;
+}
+
+.periodo-vacio {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+/* =========================================================
+   ALERTA
+========================================================= */
+
+#alertaGrupos {
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+#modalGrupo .modal-content {
+  border-radius: 16px;
+}
+
+#modalGrupo .form-control,
+#modalGrupo .form-select {
+  border-radius: 10px;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+  .titulo-admin-grupos {
+    font-size: 1.7rem;
+  }
+
+  .resumen-card {
+    min-height: 96px;
+    padding: 18px;
+  }
+
+  .resumen-card h3 {
+    font-size: 1.6rem;
+  }
+
+  .resumen-icono {
+    width: 48px;
+    height: 48px;
+    font-size: 1.2rem;
+  }
+}

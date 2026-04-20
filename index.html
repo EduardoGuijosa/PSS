@@ -2,105 +2,47 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <title>Servicio Social - Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Servicio Social - UTM</title>
     <link rel="stylesheet" href="/css/login.css" />
   </head>
   <body>
-    <div class="top-bar"></div>
+    <div class="background-decor"></div>
 
-    <div class="container">
-      <h1>SERVICIO SOCIAL</h1>
-      <p class="subtitle">UTM</p>
+    <main class="main-wrapper">
+      <div class="login-card">
+        <header class="header-section">
+          <h1>SERVICIO SOCIAL</h1>
+          <p class="subtitle">Universidad Tecnológica de Morelia</p>
+        </header>
 
-      <form id="loginForm">
-        <label>EMAIL</label>
-        <input
-          type="email"
-          id="email"
-          placeholder="hello@reallygreatsite.com"
-        />
-
-        <label>PASSWORD</label>
-        <input type="password" id="password" placeholder="******" />
-
-        <button type="submit">Iniciar Sesión</button>
-
-        <!-- Botón de registro -->
-        <button id="btnRegister" type="button">Registrarse</button>
-
-        <p id="errorMsg" class="error"></p>
-      </form>
-    </div>
-
-    <!-- Modal oculto (fuera del loginForm) -->
-    <div id="registerModal" class="modal" style="display: none">
-      <div class="modal-content">
-        <h2>Registro</h2>
-        <form id="registerForm" novalidate>
-          <input
-            type="text"
-            id="nombre"
-            name="nombre"
-            placeholder="Nombre"
-            required
-          />
-          <input
-            type="email"
-            id="emailReg"
-            name="email"
-            placeholder="Email"
-            required
-          />
-          <input
-            type="text"
-            id="telefono"
-            name="telefono"
-            placeholder="Teléfono"
-            required
-          />
-          <select id="rol" name="rol" required>
-            <option value="">Selecciona rol</option>
-            <option value="alumno">Alumno</option>
-            <option value="tutor">Tutor</option>
-            <option value="responsable">Responsable de Proyecto</option>
-          </select>
-
-          <!-- Campos extra para alumno (ocultos por defecto) -->
-          <div id="alumnoFields" style="display: none">
+        <form id="loginForm" class="styled-form">
+          <div class="input-group">
+            <label for="email">EMAIL</label>
             <input
-              type="text"
-              id="matricula"
-              name="matricula"
-              placeholder="Matrícula"
+              type="email"
+              id="email"
+              placeholder="ejemplo@utm.edu.mx"
+              required
             />
-            <select id="grupo" name="grupo">
-              <option value="">Selecciona grupo</option>
-              <option value="1">Grupo 1</option>
-              <option value="2">Grupo 2</option>
-            </select>
-            <select id="turno" name="turno">
-              <option value="">Selecciona turno</option>
-              <option value="mañana">Mañana</option>
-              <option value="tarde">Tarde</option>
-            </select>
-            <select id="tutor" name="tutor">
-              <option value="">Selecciona tutor</option>
-              <!-- Se llenará dinámicamente desde la BD -->
-            </select>
           </div>
 
-          <input
-            type="password"
-            id="passwordReg"
-            name="password"
-            placeholder="Contraseña"
-            required
-          />
-          <button type="submit">Crear cuenta</button>
+          <div class="input-group">
+            <label for="password">PASSWORD</label>
+            <input
+              type="password"
+              id="password"
+              placeholder="••••••"
+              required
+            />
+          </div>
+
+          <button type="submit" class="btn-primary">Iniciar sesión</button>
+
+          <p id="errorMsg" class="error"></p>
         </form>
-        <button id="closeModal">Cerrar</button>
       </div>
-    </div>
+    </main>
 
     <script src="/js/login.js"></script>
   </body>

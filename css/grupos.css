@@ -1,0 +1,351 @@
+/* =========================================================
+   VISTA DE GRUPOS
+   - Evita que el contenido se centre verticalmente
+   - Mantiene la card fija arriba
+   - Mejora el tamaño y la presentación general
+========================================================= */
+
+/* Estilos para el contenedor principal con id="contenido" */
+#contenido {
+  /* Hace que el contenedor se comporte como bloque normal */
+  display: block !important;
+
+  /* Evita que tenga una altura mínima grande que lo empuje hacia abajo */
+  min-height: auto !important;
+
+  /* Alinea el contenido hacia arriba */
+  align-items: flex-start !important;
+
+  /* Justifica el contenido al inicio */
+  justify-content: flex-start !important;
+
+  /* Agrega espacio interno: arriba 28px, lados 34px y abajo 34px */
+  padding: 28px 34px 34px !important;
+}
+
+/* Estilos para la card principal dentro de #contenido */
+#contenido .welcome-card {
+  /* Hace que la card ocupe todo el ancho disponible */
+  width: 100%;
+
+  /* Limita el ancho máximo de la card a 1180px */
+  max-width: 1180px !important;
+
+  /* Centra horizontalmente la card */
+  margin: 0 auto !important;
+
+  /* Espacio interno: arriba/abajo 34px y lados 40px */
+  padding: 34px 40px !important;
+
+  /* Redondea las esquinas */
+  border-radius: 22px;
+
+  /* Fondo blanco */
+  background: #ffffff;
+
+  /* Sombra suave para dar efecto de elevación */
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+
+  /* Alinea todo el texto a la izquierda */
+  text-align: left !important;
+}
+
+/* =========================================================
+   ENCABEZADO
+========================================================= */
+
+/* Estilos para el h1 dentro de la card principal */
+#contenido .welcome-card h1 {
+  /* Elimina márgenes */
+  margin: 0 !important;
+
+  /* Tamaño grande del título */
+  font-size: 2.2rem !important;
+
+  /* Hace el texto más grueso */
+  font-weight: 800;
+
+  /* Color azul oscuro */
+  color: #0d47a1;
+}
+
+/* Estilos para el párrafo debajo del título */
+#contenido .welcome-card p {
+  /* Color gris azulado */
+  color: #5f6b7a !important;
+
+  /* Tamaño de fuente ligeramente grande */
+  font-size: 1.03rem;
+
+  /* Espacio arriba del párrafo */
+  margin-top: 8px !important;
+}
+
+/* Estilos para la línea horizontal */
+#contenido .welcome-card hr {
+  /* Hace la línea muy suave */
+  opacity: 0.08 !important;
+
+  /* Margen: arriba 26px, abajo 28px */
+  margin: 26px 0 28px !important;
+}
+
+/* =========================================================
+   BUSCADOR
+========================================================= */
+
+/* Estilos para el input de buscar grupo */
+#buscarGrupo {
+  /* Bordes redondeados */
+  border-radius: 12px;
+
+  /* Borde gris azulado */
+  border: 1.5px solid #cfd8e3;
+
+  /* Espacio interno: arriba/abajo 12px y lados 14px */
+  padding: 12px 14px;
+
+  /* Tamaño de letra normal */
+  font-size: 1rem;
+
+  /* Quita sombra por defecto */
+  box-shadow: none;
+
+  /* Transición suave cuando cambie borde o sombra */
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* Estilos cuando el input está seleccionado */
+#buscarGrupo:focus {
+  /* Cambia el color del borde a azul */
+  border-color: #0d6efd;
+
+  /* Agrega una sombra azul clara alrededor */
+  box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.12);
+
+  /* Quita el borde por defecto del navegador */
+  outline: none;
+}
+
+/* Estilos para la etiqueta del buscador */
+label[for="buscarGrupo"] {
+  /* Color gris oscuro */
+  color: #1f2937;
+
+  /* Tamaño de letra un poco más grande */
+  font-size: 1.05rem;
+
+  /* Espacio debajo de la etiqueta */
+  margin-bottom: 10px;
+}
+
+/* =========================================================
+   TABLA
+========================================================= */
+
+/* Espacio superior del contenedor donde se inserta la tabla */
+#listaGrupos {
+  margin-top: 18px;
+}
+
+/* Estilos para la tabla dentro del contenedor de grupos */
+#listaGrupos .table {
+  /* Quita margen inferior */
+  margin-bottom: 0;
+
+  /* Permite mejor control de bordes y esquinas */
+  border-collapse: separate;
+
+  /* Quita espacio entre celdas */
+  border-spacing: 0;
+
+  /* Oculta cualquier desborde */
+  overflow: hidden;
+
+  /* Redondea esquinas de la tabla */
+  border-radius: 16px;
+}
+
+/* Encabezados de la tabla */
+#listaGrupos .table thead th {
+  /* Fondo oscuro */
+  background: #1f2733 !important;
+
+  /* Texto blanco */
+  color: #ffffff !important;
+
+  /* Hace el texto grueso */
+  font-weight: 700;
+
+  /* Tamaño de letra */
+  font-size: 0.98rem;
+
+  /* Quita borde */
+  border: none !important;
+
+  /* Espacio interno */
+  padding: 15px 12px;
+
+  /* Evita que el texto se corte en varias líneas */
+  white-space: nowrap;
+}
+
+/* Celdas del cuerpo de la tabla */
+#listaGrupos .table tbody td {
+  /* Espacio interno */
+  padding: 15px 12px;
+
+  /* Centra verticalmente el contenido */
+  vertical-align: middle;
+
+  /* Color suave de los bordes entre filas */
+  border-color: #e9eef5 !important;
+
+  /* Tamaño del texto */
+  font-size: 0.98rem;
+
+  /* Color del texto */
+  color: #2d3748;
+}
+
+/* Filas del cuerpo de la tabla */
+#listaGrupos .table tbody tr {
+  /* Fondo blanco */
+  background: #ffffff;
+
+  /* Transiciones suaves al pasar el mouse */
+  transition:
+    background-color 0.18s ease,
+    transform 0.18s ease;
+}
+
+/* Efecto hover para filas */
+#listaGrupos .table tbody tr:hover {
+  /* Cambia a un azul muy clarito */
+  background: #f8fbff;
+}
+
+/* =========================================================
+   BADGES
+========================================================= */
+
+/* Estilos para los badges de total, completados y pendientes */
+#listaGrupos .badge {
+  /* Bordes redondeados */
+  border-radius: 9px;
+
+  /* Espacio interno */
+  padding: 6px 10px;
+
+  /* Tamaño de letra */
+  font-size: 0.85rem;
+
+  /* Texto grueso */
+  font-weight: 700;
+
+  /* Ancho mínimo para que no se vean muy pequeños */
+  min-width: 24px;
+}
+
+/* =========================================================
+   BOTÓN VER DETALLES
+========================================================= */
+
+/* Estilos del botón "Ver Detalles" */
+#listaGrupos .btn-outline-info {
+  /* Bordes redondeados */
+  border-radius: 10px;
+
+  /* Espacio interno */
+  padding: 7px 14px;
+
+  /* Texto semigrueso */
+  font-weight: 600;
+
+  /* Grosor del borde */
+  border-width: 1.5px;
+
+  /* Transición suave en todos los cambios */
+  transition: all 0.18s ease;
+}
+
+/* Efecto hover del botón */
+#listaGrupos .btn-outline-info:hover {
+  /* Lo levanta un poquito */
+  transform: translateY(-1px);
+
+  /* Le agrega una sombra azul clara */
+  box-shadow: 0 6px 14px rgba(13, 202, 240, 0.16);
+}
+
+/* =========================================================
+   ALERTA SIN GRUPOS
+========================================================= */
+
+/* Caja que aparece cuando no hay grupos registrados */
+#sinGrupos {
+  /* Bordes redondeados */
+  border-radius: 14px !important;
+
+  /* Quita borde */
+  border: none !important;
+
+  /* Fondo azul muy claro */
+  background-color: #eef6ff !important;
+
+  /* Texto azul oscuro */
+  color: #0d47a1 !important;
+
+  /* Espacio interno */
+  padding: 16px 18px;
+
+  /* Tamaño de letra */
+  font-size: 0.97rem;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+/* Ajustes para pantallas medianas, como tablets */
+@media (max-width: 992px) {
+  /* Reduce el padding general del contenedor */
+  #contenido {
+    padding: 22px 18px 24px !important;
+  }
+
+  /* Hace que la card use todo el ancho disponible */
+  #contenido .welcome-card {
+    max-width: 100% !important;
+
+    /* Reduce el padding interno */
+    padding: 26px 22px !important;
+  }
+
+  /* Reduce un poco el tamaño del título */
+  #contenido .welcome-card h1 {
+    font-size: 1.8rem !important;
+  }
+}
+
+/* Ajustes para pantallas más pequeñas, como celulares */
+@media (max-width: 768px) {
+  /* Reduce más el tamaño del título */
+  #contenido .welcome-card h1 {
+    font-size: 1.55rem !important;
+  }
+
+  /* Reduce tamaño y padding de celdas y encabezados */
+  #listaGrupos .table thead th,
+  #listaGrupos .table tbody td {
+    font-size: 0.9rem;
+    padding: 12px 10px;
+  }
+
+  /* Hace un poco más pequeño el buscador */
+  #buscarGrupo {
+    padding: 10px 12px;
+  }
+}

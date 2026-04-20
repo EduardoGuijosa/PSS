@@ -1,0 +1,203 @@
+/* =========================================================
+   progreso.css
+   Este archivo controla la vista de progreso del alumno:
+   - separación general de la vista
+   - botones de filtro
+   - tarjetas de progreso
+   - modales
+   - checklist de tareas
+   - limpieza visual del fondo oscuro
+========================================================= */
+
+/* =========================================================
+   AJUSTES GENERALES DE LA VISTA
+========================================================= */
+
+/* Estilos para el contenedor principal dentro de la vista content */
+.content .container {
+  /* Reduce el margen superior para acercar el contenido a la topbar */
+  margin-top: 10px !important;
+
+  /* Elimina espacio interno arriba */
+  padding-top: 0 !important;
+}
+
+/* =========================================================
+   FILTROS DE PROGRESO
+   - Estos estilos ayudan a que el botón activo se note mejor
+========================================================= */
+
+/* Estilo base para todos los botones del filtro de progreso */
+.filtro-progreso {
+  /* Redondea las esquinas de los botones */
+  border-radius: 10px;
+}
+
+/* Estilo general del botón activo */
+.filtro-progreso.active {
+  /* Cuando el botón está activo, el texto se vuelve blanco */
+  color: #fff !important;
+}
+
+/* Botón activo del filtro "Todos" */
+.filtro-progreso.btn-outline-secondary.active {
+  background-color: #6c757d !important;
+  border-color: #6c757d !important;
+}
+
+/* Botón activo del filtro "Concluidos" */
+.filtro-progreso.btn-outline-success.active {
+  background-color: #198754 !important;
+  border-color: #198754 !important;
+}
+
+/* Botón activo del filtro "Pendientes" */
+.filtro-progreso.btn-outline-warning.active {
+  background-color: #ffc107 !important;
+  border-color: #ffc107 !important;
+  color: #212529 !important;
+}
+
+/* =========================================================
+   TARJETAS DE PROGRESO
+========================================================= */
+
+/* Tarjetas que muestran cada actividad o proyecto en la vista de progreso */
+#listaProgreso .card {
+  /* Redondea las esquinas de las tarjetas */
+  border-radius: 14px;
+}
+
+/* Título de cada tarjeta */
+#listaProgreso .card-title {
+  /* Ajusta el tamaño del título */
+  font-size: 1.1rem;
+}
+
+/* Barra de progreso dentro de cada tarjeta */
+#listaProgreso .progress {
+  /* Redondea las esquinas de la barra */
+  border-radius: 10px;
+
+  /* Oculta cualquier parte interna que se salga del borde redondeado */
+  overflow: hidden;
+}
+
+/* =========================================================
+   MODAL CHECKLIST
+========================================================= */
+
+/* Caja de explicación arriba del checklist */
+.checklist-info {
+  border-radius: 12px;
+  font-size: 0.92rem;
+  margin-bottom: 14px;
+}
+
+/* Cada fila del checklist */
+.checklist-item {
+  gap: 14px;
+}
+
+/* Nombre de tarea */
+.checklist-item h6 {
+  font-size: 1.03rem;
+}
+
+/* Texto secundario de horas */
+.checklist-item small {
+  font-size: 0.86rem;
+}
+
+/* Subtítulo del modal */
+#modalTareasSubtitulo {
+  font-size: 0.82rem;
+}
+
+/* =========================================================
+   ESTADO VISUAL DE TAREAS
+   - Verde si está cumplida
+   - Gris si está pendiente
+   - No cambia a blanco al pasar el mouse
+========================================================= */
+
+.estado-tarea-pill {
+  min-width: 130px;
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  border: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Tarea pendiente */
+.estado-tarea-pendiente {
+  background: #e5e7eb !important;
+  color: #374151 !important;
+  border-color: #d1d5db !important;
+}
+
+/* Tarea cumplida */
+.estado-tarea-cumplida {
+  background: #198754 !important;
+  color: #ffffff !important;
+  border-color: #198754 !important;
+}
+
+/* =========================================================
+   MODALES
+========================================================= */
+
+/* Ajuste ligero del contenido del modal */
+.modal-content {
+  border-radius: 14px;
+}
+
+/* =========================================================
+   BOTÓN PERSONALIZADO DEL RESPONSABLE
+========================================================= */
+
+.btn-responsable {
+  padding: 6px 10px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-responsable:hover {
+  background: #0056b3;
+}
+
+/* =========================================================
+   LIMPIEZA VISUAL DEL BACKDROP
+========================================================= */
+
+body:not(.modal-open) .modal-backdrop,
+.modal-backdrop.fade:not(.show) {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+  .checklist-info {
+    font-size: 0.88rem;
+  }
+
+  .estado-tarea-pill {
+    min-width: 115px;
+    padding: 7px 14px;
+    font-size: 0.86rem;
+  }
+}

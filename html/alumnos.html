@@ -2,9 +2,18 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <title>Lista de Alumnos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lista de Alumnos | Servicio Social</title>
 
-    <!-- CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+
     <link rel="stylesheet" href="/css/portada.css" />
     <link rel="stylesheet" href="/css/menu.css" />
     <link rel="stylesheet" href="/css/topbar.css" />
@@ -12,29 +21,165 @@
   </head>
 
   <body>
-    <!-- MENU -->
     <div id="menu-container"></div>
 
-    <!-- MAIN -->
     <div class="main">
-      <!-- TOPBAR -->
       <div id="topbar-container"></div>
 
-      <!-- CONTENIDO -->
       <div class="content">
-        <h1>Lista de Alumnos</h1>
+        <div class="container mt-4">
+          <div class="alumnos-wrapper">
+            <!-- =========================================================
+                 ENCABEZADO
+            ========================================================= -->
+            <div
+              class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4"
+            >
+              <div>
+                <a
+                  href="grupos.html"
+                  class="btn btn-secondary btn-regresar mb-3"
+                >
+                  <i class="fas fa-arrow-left me-2"></i>Regresar a Grupos
+                </a>
 
-        <div id="sinAlumnos" style="display: none">
-          No hay alumnos registrados.
+                <h2 class="titulo-pagina mb-1" id="tituloPagina">
+                  Lista de Alumnos
+                </h2>
+                <p class="subtitulo-pagina mb-0">
+                  Consulta el avance de los alumnos del grupo y filtra por
+                  estatus.
+                </p>
+              </div>
+            </div>
+
+            <!-- =========================================================
+                 RESUMEN / FILTROS GRANDES
+                 Ahora las tarjetas superiores también funcionan como filtros
+            ========================================================= -->
+            <div class="row g-3 mb-4">
+              <div class="col-md-4">
+                <button
+                  type="button"
+                  id="cardFiltroTodos"
+                  class="resumen-card resumen-azul resumen-filtro activo"
+                  onclick="cambiarFiltroAlumno('todos')"
+                >
+                  <div class="resumen-icono">
+                    <i class="fas fa-users"></i>
+                  </div>
+                  <div class="resumen-contenido">
+                    <small>Total alumnos</small>
+                    <h3 id="cardTotalAlumnos">0</h3>
+                  </div>
+                </button>
+              </div>
+
+              <div class="col-md-4">
+                <button
+                  type="button"
+                  id="cardFiltroLiberados"
+                  class="resumen-card resumen-verde resumen-filtro"
+                  onclick="cambiarFiltroAlumno('liberados')"
+                >
+                  <div class="resumen-icono">
+                    <i class="fas fa-check-circle"></i>
+                  </div>
+                  <div class="resumen-contenido">
+                    <small>Liberados</small>
+                    <h3 id="cardLiberados">0</h3>
+                  </div>
+                </button>
+              </div>
+
+              <div class="col-md-4">
+                <button
+                  type="button"
+                  id="cardFiltroPendientes"
+                  class="resumen-card resumen-amarillo resumen-filtro"
+                  onclick="cambiarFiltroAlumno('pendientes')"
+                >
+                  <div class="resumen-icono">
+                    <i class="fas fa-hourglass-half"></i>
+                  </div>
+                  <div class="resumen-contenido">
+                    <small>Pendientes</small>
+                    <h3 id="cardPendientes">0</h3>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            <!-- =========================================================
+                 MENSAJE SIN ALUMNOS
+            ========================================================= -->
+            <div
+              id="sinAlumnos"
+              class="alert alerta-vacia text-center"
+              style="display: none"
+            >
+              <i class="fas fa-info-circle me-2"></i>
+              No hay alumnos registrados en este grupo.
+            </div>
+
+            <!-- =========================================================
+                 BUSCADOR
+            ========================================================= -->
+            <div class="card shadow-sm border-0 mb-4">
+              <div class="card-body">
+                <div class="row g-2 align-items-end">
+                  <div class="col-md-10">
+                    <label for="buscarAlumno" class="form-label fw-bold">
+                      Buscar alumno
+                    </label>
+                    <input
+                      type="text"
+                      id="buscarAlumno"
+                      class="form-control"
+                      placeholder="Escribe nombre o matrícula..."
+                    />
+                  </div>
+
+                  <div class="col-md-2">
+                    <button
+                      type="button"
+                      id="btnLimpiarBusquedaAlumno"
+                      class="btn btn-outline-secondary w-100"
+                    >
+                      Limpiar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- =========================================================
+                 LISTA
+            ========================================================= -->
+            <div class="card shadow-sm border-0">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover align-middle tabla-alumnos">
+                    <thead class="table-light">
+                      <tr>
+                        <th>Alumno</th>
+                        <th>Contacto</th>
+                        <th>Horas</th>
+                        <th>Estado</th>
+                        <th>Actividades</th>
+                      </tr>
+                    </thead>
+                    <tbody id="listaAlumnos"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <div id="listaAlumnos"></div>
       </div>
     </div>
 
-    <!-- JS -->
-    <script src="/js/alumnos.js"></script>
-
     <script src="/js/layout.js"></script>
+    <script src="/js/alumnos.js"></script>
   </body>
 </html>

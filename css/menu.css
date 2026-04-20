@@ -1,47 +1,120 @@
-/* SIDEBAR */
-.sidebar {
-  width: 200px;
-  background: #2c3e50;
-  color: white;
-  height: 100vh;
-  padding: 20px;
-}
-
-.sidebar h2 {
-  text-align: center;
-}
-
-.sidebar button {
-  width: 100%;
-  margin: 10px 0;
-  padding: 10px;
-  border: none;
-  background: #34495e;
-  color: white;
-  cursor: pointer;
-}
-
-.sidebar button:hover {
-  background: #1abc9c;
-}
-.layout {
-  display: flex;
-  height: 100vh;
-}
+/* =========================================================
+   menu.css
+========================================================= */
 
 #menu-container {
-  width: 250px;
-  background: #1e293b;
+  width: 260px;
+  background: linear-gradient(180deg, #14202b 0%, #172733 100%);
   color: white;
+  padding: 0;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  box-shadow: 4px 0 14px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
 }
 
-.main {
-  flex: 1;
+.sidebar {
+  height: 100%;
   display: flex;
   flex-direction: column;
 }
 
-.container {
-  flex: 1;
-  overflow-y: auto;
+.sidebar-top {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 34px 20px 26px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-brand-title {
+  font-weight: 800;
+  font-size: 18px;
+  color: #1f7aff;
+  letter-spacing: 2px;
+  text-align: center;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  padding-top: 18px;
+}
+
+#menu-container button,
+#menu-container a {
+  background: none;
+  border: none;
+  color: #b7c2ce;
+  text-align: left;
+  padding: 16px 30px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  width: 100%;
+  display: block;
+  text-decoration: none;
+}
+
+#menu-container button:hover,
+#menu-container a:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+  padding-left: 38px;
+}
+
+.sidebar-bottom {
+  margin-top: 40px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 18px;
+}
+
+.btn-salir {
+  color: #ff5d6c !important;
+  font-weight: 700 !important;
+}
+
+.btn-salir:hover {
+  background-color: rgba(255, 93, 108, 0.12) !important;
+  color: #ff7a86 !important;
+  padding-left: 38px !important;
+}
+
+@media (max-width: 768px) {
+  #menu-container {
+    width: 250px;
+  }
+
+  .sidebar-brand {
+    padding: 30px 18px 22px;
+  }
+
+  .sidebar-brand-title {
+    font-size: 17px;
+  }
+
+  #menu-container button,
+  #menu-container a {
+    padding: 15px 26px;
+    font-size: 14px;
+  }
+
+  #menu-container button:hover,
+  #menu-container a:hover {
+    padding-left: 34px;
+  }
+
+  .sidebar-bottom {
+    margin-top: 90px;
+    padding-top: 16px;
+  }
 }

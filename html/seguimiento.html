@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Seguimiento de Proyectos | Servicio Social</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="/css/portada.css" />
+    <link rel="stylesheet" href="/css/menu.css" />
+    <link rel="stylesheet" href="/css/topbar.css" />
+    <link rel="stylesheet" href="/css/actividad.css" />
+    <link rel="stylesheet" href="/css/seguimiento.css" />
+  </head>
+  <body>
+    <div id="menu-container"></div>
+
+    <div class="main">
+      <div id="topbar-container"></div>
+
+      <div class="content">
+        <div class="container mt-3">
+          <div class="text-center mb-4">
+            <h2 class="text-primary fw-bold m-0">Seguimiento de Alumnos</h2>
+            <p class="text-muted small mt-2">
+              Selecciona un proyecto para ver a los alumnos inscritos y evaluar
+              su progreso.
+            </p>
+          </div>
+
+          <div class="card shadow-sm border-0 mb-3">
+            <div class="card-header bg-white py-3">
+              <h5 class="mb-0">Filtro</h5>
+            </div>
+
+            <div class="card-body">
+              <div class="row g-2 align-items-end">
+                <div class="col-md-10">
+                  <label for="buscarProyecto" class="form-label fw-bold">
+                    Buscar por nombre del proyecto
+                  </label>
+                  <input
+                    type="text"
+                    id="buscarProyecto"
+                    class="form-control"
+                    placeholder="Ej: Reforestación, Sistema Monitoreo, Tablero..."
+                  />
+                </div>
+
+                <div class="col-md-2">
+                  <button
+                    type="button"
+                    id="btnLimpiarFiltroProyecto"
+                    class="btn btn-outline-secondary w-100"
+                  >
+                    Limpiar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card shadow-sm border-0">
+            <div class="card-header bg-white py-3">
+              <h5 class="mb-0">Proyectos Registrados</h5>
+            </div>
+
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                  <thead class="table-light">
+                    <tr>
+                      <th style="width: 25%">Proyecto</th>
+                      <th style="width: 35%">Descripción</th>
+                      <th class="text-center" style="width: 10%">Inscritos</th>
+                      <th class="text-center" style="width: 10%">Cupo</th>
+                      <th class="text-center" style="width: 20%">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody id="listaActividadesResponsable"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL ALUMNOS -->
+    <div class="modal fade" id="modalAlumnos" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+          <div class="modal-header bg-dark text-white">
+            <div>
+              <h5 class="modal-title mb-1" id="tituloModalAlumnos">
+                Alumnos Inscritos
+              </h5>
+              <small
+                id="subtituloModalAlumnos"
+                class="text-white-50 d-block"
+              ></small>
+            </div>
+
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <div class="table-responsive">
+              <table class="table table-hover align-middle">
+                <thead class="table-light">
+                  <tr>
+                    <th>Alumno</th>
+                    <th>Progreso (Tareas)</th>
+                    <th class="text-center">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="tablaAlumnosInscritos"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL INFO DEL ALUMNO -->
+    <div
+      class="modal fade"
+      id="modalInfoAlumno"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+          <div class="modal-header bg-info text-white">
+            <div>
+              <h5 class="modal-title mb-1">Información del alumno</h5>
+              <small class="text-white-50 d-block">
+                Datos generales del alumno inscrito
+              </small>
+            </div>
+
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <div class="text-center mb-4">
+              <img
+                id="infoAlumnoFoto"
+                src="/img/default-user.png"
+                alt="Foto del alumno"
+                style="
+                  width: 96px;
+                  height: 96px;
+                  object-fit: cover;
+                  border-radius: 50%;
+                  border: 3px solid #d9d9d9;
+                "
+              />
+            </div>
+
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label fw-bold">Nombre</label>
+                <input
+                  type="text"
+                  id="infoAlumnoNombre"
+                  class="form-control"
+                  readonly
+                />
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-bold">Matrícula</label>
+                <input
+                  type="text"
+                  id="infoAlumnoMatricula"
+                  class="form-control"
+                  readonly
+                />
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-bold">Grupo</label>
+                <input
+                  type="text"
+                  id="infoAlumnoGrupo"
+                  class="form-control"
+                  readonly
+                />
+              </div>
+
+              <div class="col-12">
+                <label class="form-label fw-bold">Tutor</label>
+                <input
+                  type="text"
+                  id="infoAlumnoTutor"
+                  class="form-control"
+                  readonly
+                />
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-bold">Teléfono</label>
+                <input
+                  type="text"
+                  id="infoAlumnoTelefono"
+                  class="form-control"
+                  readonly
+                />
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-bold">Correo</label>
+                <input
+                  type="text"
+                  id="infoAlumnoCorreo"
+                  class="form-control"
+                  readonly
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer bg-light">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL TAREAS -->
+    <div
+      class="modal fade"
+      id="modalTareasAlumno"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+          <div class="modal-header bg-primary text-white">
+            <div>
+              <h5 class="modal-title mb-1" id="tituloModalChecklist">
+                Checklist de Tareas
+              </h5>
+              <small
+                id="subtituloModalChecklist"
+                class="text-white-50 d-block"
+              ></small>
+            </div>
+
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <div class="alert alert-light border checklist-info">
+              <strong>Indicaciones:</strong>
+              Da clic en el botón <strong>Cumplida</strong> para marcar una
+              tarea como realizada por el alumno. Si necesitas corregirla,
+              puedes volver a dar clic para dejarla pendiente.
+            </div>
+
+            <div
+              id="listaChecklistTareas"
+              class="list-group list-group-flush"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/layout.js"></script>
+    <script src="/js/seguimiento.js"></script>
+  </body>
+</html>

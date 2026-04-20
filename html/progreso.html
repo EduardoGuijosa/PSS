@@ -2,37 +2,191 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <title>Progreso</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mi Progreso | Servicio Social</title>
 
-    <link rel="stylesheet" href="/css/actividad.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="/css/portada.css" />
     <link rel="stylesheet" href="/css/menu.css" />
     <link rel="stylesheet" href="/css/topbar.css" />
+    <link rel="stylesheet" href="/css/actividad.css" />
+    <link rel="stylesheet" href="/css/progreso.css" />
   </head>
 
   <body>
-    <div class="layout">
-      <!-- MENU -->
-      <div id="menu-container"></div>
+    <div id="menu-container"></div>
 
-      <!-- CONTENIDO -->
-      <div class="main">
-        <div id="topbar-container"></div>
+    <div class="main">
+      <div id="topbar-container"></div>
 
+      <div class="content">
         <div class="container mt-4">
-          <h2 class="text-center mb-4">Progreso del alumno</h2>
+          <h2 class="mb-4">Mi Progreso</h2>
 
-          <div class="card shadow mb-4">
-            <div class="card-body text-center">
-              <h4 id="horasLiberadas"></h4>
-              <h4 id="horasFaltantes"></h4>
+          <div class="row mb-4">
+            <div class="col-md-6 mb-3">
+              <div class="card shadow-sm border-0 bg-primary text-white">
+                <div class="card-body text-center">
+                  <h6 class="text-uppercase small">Horas Liberadas</h6>
+                  <h2 id="horasLiberadas" class="display-6 fw-bold">0</h2>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <div class="card shadow-sm border-0 bg-light">
+                <div class="card-body text-center">
+                  <h6 class="text-uppercase small text-muted">
+                    Horas Faltantes
+                  </h6>
+                  <h2 id="horasFaltantes" class="display-6 fw-bold text-dark">
+                    480
+                  </h2>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div id="listaProgreso"></div>
+          <div class="card shadow-sm border-0 mb-3">
+            <div class="card-header bg-white py-3">
+              <h5 class="mb-0">Filtros</h5>
+            </div>
+            <div class="card-body">
+              <div class="d-flex flex-wrap gap-2">
+                <button
+                  class="btn btn-outline-secondary filtro-progreso active"
+                  onclick="cambiarFiltroProgreso('Todos')"
+                >
+                  Todos
+                </button>
+
+                <button
+                  class="btn btn-outline-success filtro-progreso"
+                  onclick="cambiarFiltroProgreso('Concluidos')"
+                >
+                  Proyectos concluidos
+                </button>
+
+                <button
+                  class="btn btn-outline-warning filtro-progreso"
+                  onclick="cambiarFiltroProgreso('Pendientes')"
+                >
+                  Proyectos pendientes
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card shadow-sm border-0">
+            <div class="card-header bg-white py-3">
+              <h5 class="mb-0">Actividades Inscritas</h5>
+            </div>
+            <div class="card-body">
+              <div id="listaProgreso" class="row"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
+    <!-- =========================================================
+         MODAL RESPONSABLE
+    ========================================================= -->
+    <div
+      class="modal fade"
+      id="modalResponsable"
+      tabindex="-1"
+      data-bs-backdrop="static"
+      aria-labelledby="modalResponsableLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+          <div class="modal-header bg-info text-white">
+            <h5 class="modal-title" id="modalResponsableLabel">
+              Información del Responsable
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="small text-muted d-block">Nombre:</label>
+              <span id="resNombre" class="fw-bold fs-5">-</span>
+            </div>
+
+            <div class="mb-3">
+              <label class="small text-muted d-block">Teléfono:</label>
+              <span id="resTelefono" class="fw-bold">-</span>
+            </div>
+
+            <div class="mb-3">
+              <label class="small text-muted d-block">Ubicación:</label>
+              <span id="resUbicacion" class="fw-bold">-</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         MODAL CHECKLIST DE TAREAS
+    ========================================================= -->
+    <div
+      class="modal fade"
+      id="modalTareas"
+      tabindex="-1"
+      data-bs-backdrop="static"
+      aria-labelledby="modalTareasLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+          <div class="modal-header bg-primary text-white">
+            <div>
+              <h5 class="modal-title mb-1" id="modalTareasLabel">
+                Checklist de Tareas
+              </h5>
+              <small
+                id="modalTareasSubtitulo"
+                class="text-white-50 d-block"
+              ></small>
+            </div>
+
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <div class="alert alert-light border checklist-info">
+              <strong>Indicaciones:</strong>
+              Aquí puedes consultar qué tareas de este proyecto ya están
+              cumplidas y cuáles siguen pendientes.
+            </div>
+
+            <div
+              id="listaChecklistAlumno"
+              class="list-group list-group-flush"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/js/layout.js"></script>
     <script src="/js/progreso.js"></script>
   </body>

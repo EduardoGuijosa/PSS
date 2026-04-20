@@ -1,88 +1,517 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
+/* =========================================================
+   login.css
+   Este archivo controla el diseño de la vista de login y registro:
+   - colores generales
+   - tarjeta de inicio de sesión
+   - inputs y botones
+   - modal de registro
+   - campos dinámicos
+   - responsive
+========================================================= */
+
+/* =========================================================
+   VARIABLES GLOBALES
+   - :root permite definir variables CSS reutilizables
+========================================================= */
+
+:root {
+  /* Color principal azul del sistema */
+  --primary-color: #0056b3;
+
+  /* Color de fondo general de la página */
+  --bg-color: #f0f2f5;
+
+  /* Color oscuro para textos principales */
+  --text-dark: #1c1e21;
+
+  /* Color gris para textos secundarios */
+  --text-light: #606770;
+
+  /* Color blanco */
+  --white: #ffffff;
+
+  /* Color rojo para mensajes de error */
+  --error: #fa3e3e;
+
+  /* Sombra principal usada en tarjetas */
+  --shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+
+  /* Radio general de bordes redondeados */
+  --border-radius: 12px;
 }
+
+/* =========================================================
+   RESET GENERAL
+   - Aplica a todos los elementos
+========================================================= */
+
+* {
+  /* Elimina márgenes por defecto */
+  margin: 0;
+
+  /* Elimina padding por defecto */
+  padding: 0;
+
+  /* Hace que border y padding se incluyan dentro del ancho total */
+  box-sizing: border-box;
+
+  /* Define la fuente general del sistema */
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* =========================================================
+   BODY
+   - Fondo general y centrado del contenido
+========================================================= */
 
 body {
-  background-color: #dcdcdc;
+  /* Fondo general usando la variable definida arriba */
+  background-color: var(--bg-color);
+
+  /* Altura mínima igual a toda la pantalla */
+  min-height: 100vh;
+
+  /* Usa flexbox */
+  display: flex;
+
+  /* Centra verticalmente el contenido */
+  align-items: center;
+
+  /* Centra horizontalmente el contenido */
+  justify-content: center;
+
+  /* Evita que aparezca scroll horizontal */
+  overflow-x: hidden;
 }
 
-.top-bar {
+/* =========================================================
+   DECORACIÓN DE FONDO SUPERIOR
+========================================================= */
+
+.background-decor {
+  /* Posiciona el bloque de fondo de forma absoluta */
+  position: absolute;
+
+  /* Pegado arriba */
+  top: 0;
+
+  /* Ocupa todo el ancho */
   width: 100%;
-  height: 60px;
-  background-color: #a8c0d4;
+
+  /* Altura fija de la decoración */
+  height: 350px;
+
+  /* Degradado de azul claro hacia el color de fondo general */
+  background: linear-gradient(180deg, #a8c0d4 0%, var(--bg-color) 100%);
+
+  /* Lo manda detrás del contenido */
+  z-index: -1;
 }
 
-.container {
-  width: 400px;
-  margin: 80px auto;
+/* =========================================================
+   TARJETA DE LOGIN
+========================================================= */
+
+.login-card {
+  /* Fondo blanco */
+  background: var(--white);
+
+  /* Espaciado interno amplio */
+  padding: 50px;
+
+  /* Ocupa todo el ancho disponible */
+  width: 100%;
+
+  /* Ancho máximo de la tarjeta */
+  max-width: 500px;
+
+  /* Bordes redondeados */
+  border-radius: var(--border-radius);
+
+  /* Sombra principal */
+  box-shadow: var(--shadow);
+}
+
+/* =========================================================
+   ENCABEZADO DEL LOGIN
+========================================================= */
+
+.header-section {
+  /* Centra el contenido del encabezado */
   text-align: center;
+
+  /* Espacio debajo del encabezado */
+  margin-bottom: 40px;
 }
 
+/* Título principal */
 h1 {
-  font-size: 32px;
-  margin-bottom: 10px;
+  /* Tamaño grande */
+  font-size: 28px;
+
+  /* Color principal azul */
+  color: var(--primary-color);
+
+  /* Separación inferior */
+  margin-bottom: 8px;
 }
 
-.subtitle {
-  margin-bottom: 30px;
-  font-size: 14px;
+/* =========================================================
+   CAMPOS DEL FORMULARIO
+========================================================= */
+
+/* Grupo general de input */
+.input-group {
+  /* Espacio entre grupos de inputs */
+  margin-bottom: 25px;
 }
 
-form {
+/* Etiquetas de los campos */
+label {
+  /* Hace que cada label quede en su propia línea */
+  display: block;
+
+  /* Tamaño pequeño */
+  font-size: 11px;
+
+  /* Texto grueso */
+  font-weight: 700;
+
+  /* Separación debajo del label */
+  margin-bottom: 8px;
+
+  /* Color gris */
+  color: var(--text-light);
+
+  /* Espaciado entre letras */
+  letter-spacing: 0.5px;
+}
+
+/* Estilos para inputs y selects */
+input,
+select {
+  /* Ocupan todo el ancho del contenedor */
+  width: 100%;
+
+  /* Espaciado interno */
+  padding: 14px;
+
+  /* Borde gris claro */
+  border: 1px solid #dddfe2;
+
+  /* Bordes redondeados */
+  border-radius: 8px;
+
+  /* Tamaño del texto */
+  font-size: 15px;
+
+  /* Fondo gris muy claro */
+  background-color: #f5f6f7;
+
+  /* Transición suave al cambiar estilos */
+  transition: all 0.2s ease;
+}
+
+/* Efecto cuando el input o select está enfocado */
+input:focus,
+select:focus {
+  /* Quita el borde azul por defecto del navegador */
+  outline: none;
+
+  /* Cambia el borde a azul */
+  border-color: var(--primary-color);
+
+  /* Fondo blanco al escribir */
+  background-color: var(--white);
+
+  /* Sombra azul suave alrededor */
+  box-shadow: 0 0 0 2px rgba(0, 86, 179, 0.2);
+}
+
+/* =========================================================
+   BOTONES
+========================================================= */
+
+/* Estilo base para todos los botones */
+button {
+  /* Ancho completo */
+  width: 100%;
+
+  /* Espaciado interno */
+  padding: 16px;
+
+  /* Bordes redondeados */
+  border-radius: 8px;
+
+  /* Tamaño de letra */
+  font-size: 16px;
+
+  /* Texto en negrita */
+  font-weight: bold;
+
+  /* Cursor de mano */
+  cursor: pointer;
+
+  /* Sin borde */
+  border: none;
+
+  /* Transición suave */
+  transition: 0.3s;
+}
+
+/* Botón principal, por ejemplo iniciar sesión */
+.btn-primary {
+  /* Fondo azul */
+  background-color: var(--primary-color);
+
+  /* Texto blanco */
+  color: white;
+
+  /* Separación superior */
+  margin-top: 10px;
+}
+
+/* Hover del botón principal */
+.btn-primary:hover {
+  /* Azul más oscuro */
+  background-color: #004494;
+
+  /* Lo levanta ligeramente */
+  transform: translateY(-1px);
+}
+
+/* Botón secundario, por ejemplo registrarse */
+.btn-secondary {
+  /* Fondo verde */
+  background-color: #42b72a;
+
+  /* Texto blanco */
+  color: white;
+
+  /* Separación superior */
+  margin-top: 20px;
+}
+
+/* Hover del botón secundario */
+.btn-secondary:hover {
+  /* Verde más oscuro */
+  background-color: #36a420;
+}
+
+/* Botón fantasma o de texto */
+.btn-ghost {
+  /* Sin fondo */
+  background: none;
+
+  /* Texto gris */
+  color: var(--text-light);
+
+  /* Separación superior */
+  margin-top: 15px;
+
+  /* Subrayado */
+  text-decoration: underline;
+}
+
+/* =========================================================
+   MODAL CENTRADO
+========================================================= */
+
+.modal {
+  /* Fijo respecto a la ventana */
+  position: fixed;
+
+  /* Pegado arriba e izquierda */
+  top: 0;
+  left: 0;
+
+  /* Ocupa toda la pantalla */
+  width: 100%;
+  height: 100%;
+
+  /* Fondo oscuro semitransparente */
+  background: rgba(0, 0, 0, 0.7);
+
+  /* Desenfoque del fondo */
+  backdrop-filter: blur(8px);
+
+  /* Muy por encima de otros elementos */
+  z-index: 9999;
+
+  /* Flex para centrar el contenido del modal */
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Si el modal tiene display:none en línea, se oculta completamente */
+.modal[style*="display: none"] {
+  display: none !important;
+}
+
+/* Caja interna del modal */
+.modal-content {
+  /* Fondo blanco */
+  background: var(--white);
+
+  /* Espaciado interno */
+  padding: 40px;
+
+  /* Ocupa la mayor parte del ancho disponible */
+  width: 90%;
+
+  /* Ancho máximo */
+  max-width: 800px;
+
+  /* Bordes redondeados */
+  border-radius: var(--border-radius);
+
+  /* Sombra fuerte para destacar el modal */
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+
+  /* Altura máxima relativa a la pantalla */
+  max-height: 90vh;
+
+  /* Si el contenido se pasa, activa scroll vertical */
+  overflow-y: auto;
+
+  /* Posición relativa por si se usan elementos internos posicionados */
+  position: relative;
+}
+
+/* Encabezado del modal */
+.modal-header {
+  /* Línea divisoria abajo */
+  border-bottom: 1px solid #eee;
+
+  /* Espacio debajo del borde */
+  padding-bottom: 20px;
+
+  /* Margen inferior */
+  margin-bottom: 25px;
+}
+
+/* =========================================================
+   DISTRIBUCIÓN DEL FORMULARIO DE REGISTRO
+========================================================= */
+
+/* Fila de campos en horizontal */
+.form-row {
+  /* Usa flexbox */
+  display: flex;
+
+  /* Espacio entre columnas */
+  gap: 20px;
+
+  /* Separación inferior */
+  margin-bottom: 15px;
+}
+
+/* Contenedor individual de cada campo */
+.field-container {
+  /* Hace que todos los campos se repartan el espacio */
+  flex: 1;
+
+  /* Acomoda label e input en columna */
   display: flex;
   flex-direction: column;
-  text-align: left;
 }
 
-label {
+/* =========================================================
+   CAMPOS DINÁMICOS
+========================================================= */
+
+/* Caja para campos que aparecen según el rol */
+.dynamic-fields {
+  /* Fondo gris muy claro */
+  background: #f8f9fa;
+
+  /* Espaciado interno */
+  padding: 20px;
+
+  /* Bordes redondeados */
+  border-radius: 10px;
+
+  /* Separación arriba y abajo */
+  margin: 20px 0;
+}
+
+/* Borde lateral azul */
+.blue-border {
+  border-left: 5px solid var(--primary-color);
+}
+
+/* Borde lateral verde */
+.green-border {
+  border-left: 5px solid #42b72a;
+}
+
+/* Etiqueta de sección */
+.section-label {
+  /* Hace que quede en su propia línea */
+  display: block;
+
+  /* Tamaño pequeño */
   font-size: 12px;
-  margin-top: 15px;
-  margin-bottom: 5px;
-}
 
-input {
-  padding: 10px;
-  border: 1px solid #999;
-  background-color: #eaeaea;
-}
+  /* Color azul */
+  color: var(--primary-color);
 
-button {
-  margin-top: 25px;
-  padding: 12px;
-  background-color: black;
-  color: white;
-  border: none;
-  cursor: pointer;
+  /* Separación inferior */
+  margin-bottom: 15px;
+
+  /* Texto grueso */
   font-weight: bold;
 }
 
-button:hover {
-  background-color: #333;
+/* =========================================================
+   CAMPOS DE FECHA
+========================================================= */
+
+/* Fila horizontal para fechas */
+.date-row {
+  display: flex;
+  gap: 20px;
 }
 
+/* Cada campo de fecha ocupa el mismo espacio */
+.date-field {
+  flex: 1;
+}
+
+/* =========================================================
+   MENSAJES DE ERROR
+========================================================= */
+
+/* Texto de error */
 .error {
-  margin-top: 10px;
-  color: red;
-  font-size: 13px;
+  /* Color rojo */
+  color: var(--error);
+
+  /* Centra el texto */
   text-align: center;
+
+  /* Separación superior */
+  margin-top: 15px;
+
+  /* Peso medio */
+  font-weight: 500;
 }
 
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-}
+/* =========================================================
+   RESPONSIVE
+========================================================= */
 
-.modal-content {
-  background: #fff;
-  margin: 10% auto;
-  padding: 20px;
-  width: 300px;
-  border-radius: 8px;
+@media (max-width: 768px) {
+  /* En pantallas pequeñas, las filas del formulario se apilan */
+  .form-row,
+  .date-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* Reduce padding del modal en celulares o tablets pequeñas */
+  .modal-content {
+    padding: 20px;
+  }
 }

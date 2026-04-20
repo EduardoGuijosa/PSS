@@ -1,73 +1,205 @@
-/* =========================
+/* =========================================================
    VALIDAR SESIÓN
-========================= */
+========================================================= */
 (function validarSesion() {
-  // const usuario guarda el nombre del usuario logueado en el localStorage
   const usuario = localStorage.getItem("usuario");
-  // const rol guarda el rol del usuario logueado en el localStorage, en minusculas para evitar problemas
   const rol = localStorage.getItem("rol")?.toLowerCase();
 
-  // si no hay usuario o rol en el localStorage, se redirige al index o login
   if (!usuario || !rol) {
     window.location.replace("/index.html");
   }
 })();
 
-/* =========================
-   URLS de las APIs
-========================= */
-const API_URL = "http://127.0.0.1:3000/api/actividad"; // API de actividades
-const API_TAREAS = "http://127.0.0.1:3000/api/tareas"; // API de tareas
+/* =========================================================
+   URLS DE LAS APIs
+========================================================= */
+const API_URL = "http://127.0.0.1:3000/api/actividad";
+const API_URL_ASIGNACION = "http://127.0.0.1:3000/api/asignacion";
+const API_TAREAS = "http://127.0.0.1:3000/api/tareas";
 
-/* =========================
-   VARIABLES GLOBALES
-========================= */
-let listaActividades, sinActividades; // LISTA DE ACTIVIDADES, estas son las que se muestran en la tabla
-let modal; // MODAL ACTIVIDAD, esta es la que se muestra al crear o editar una actividad
+/* =========================================================
+   VARIABLES GLOBALES DEL DOM
+========================================================= */
+let listaActividades;
+let sinActividades;
+let resumenProyectos;
+let contenedorFiltros;
 
-// MODALES TAREAS
-let modalTareas, modalFormTarea;
+let modal;
+let modalTareas;
+let modalFormTarea;
 
-let inputId,
-  inputNombre,
-  inputDescripcion,
-  inputAlumnos,
-  inputHoras,
-  inputInicio,
-  inputFin;
+let inputId;
+let inputNombre;
+let inputDescripcion;
+let inputAlumnos;
+let inputHoras;
+let inputInicio;
+let inputFin;
+let inputEstatus;
 
-// INPUTS TAREA
-let inputTareaId, inputNombreTarea, inputHorasTarea, inputFechaTarea;
+let inputTareaId;
+let inputNombreTarea;
+let inputHorasTarea;
+let inputFechaInicioTarea;
+let inputFechaFinTarea;
 
-// CONTROL GLOBAL
-let idActividadActual = null; // ID DE LA ACTIVIDAD ACTUAL, es null por defecto y se cambia cuando se selecciona una actividad
+let tituloModalActividad;
+let textoBtnGuardarProyecto;
+let inputBuscar;
+let inputFiltroHoras;
+let contenedorBusquedaResponsable;
+let contenedorFiltroHorasAlumno;
+let nombreActividadModal;
+let infoHoras;
+let tablaTareas;
+let btnNuevaTarea;
 
-/* =========================
-   Encabezados con token
-========================= */
+/* =========================================================
+   VARIABLES DE ESTADO
+========================================================= */
+let rolActual = "";
+let idActividadActual = null;
+let filtroEstatus = "Todos";
+let textoBusqueda = "";
+let filtroHoras = "Todos";
+let actividadesOriginales = [];
+let tareasActuales = [];
+
+/* =========================================================
+   FUNCIÓN PARA HEADERS
+========================================================= */
 function getHeaders() {
-  // Función para obtener los encabezados
   return {
-    // se retorna un objeto con los encabezados
     "Content-Type": "application/json",
-    // "Content-Type": "application/json", es para indicar que se estan enviando datos en formato JSON
     Authorization: "Bearer " + localStorage.getItem("token"),
-    // "Authorization": "Bearer " muestra el token
-    // localStorage.getItem("token") obtiene el token del localStorage
   };
 }
 
-/* =========================
-   INICIO
-========================= */
-window.addEventListener("load", () => {
-  // Escuchar los evento de carga de la ventana
+/* =========================================================
+   FUNCIÓN PARA CERRAR SESIÓN
+========================================================= */
+function cerrarSesion() {
+  localStorage.removeItem("token");
+  localStorage.removeItem("usuario");
+  localStorage.removeItem("rol");
+  window.location.replace("/index.html");
+}
 
-  // LISTA DE ACTIVIDADES
+/* =========================================================
+   UTILIDADES GENERALES
+========================================================= */
+async function leerJSONSeguro(res) {
+  const texto = await res.text();
+
+  try {
+    return texto ? JSON.parse(texto) : {};
+  } catch (error) {
+    console.error("La respuesta no vino en JSON válido:", texto);
+    return {};
+  }
+}
+
+function escaparHTML(valor) {
+  return String(valor ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function formatearFecha(fecha) {
+  if (!fecha) return "Sin fecha";
+
+  const soloFecha = String(fecha).includes("T")
+    ? String(fecha).split("T")[0]
+    : String(fecha);
+
+  const partes = soloFecha.split("-");
+
+  if (partes.length !== 3) return "Sin fecha";
+
+  const [anio, mes, dia] = partes;
+  return `${dia}/${mes}/${anio}`;
+}
+
+function fechaInput(fecha) {
+  if (!fecha) return "";
+  return String(fecha).includes("T")
+    ? String(fecha).split("T")[0]
+    : String(fecha);
+}
+
+function obtenerClaseStatus(estatus) {
+  if (estatus === "Activa") return "status-activa";
+  if (estatus === "Pendiente") return "status-pendiente";
+  if (estatus === "Cancelada") return "status-cancelada";
+  return "status-finalizada";
+}
+
+function obtenerClaseBarraProgreso(estatus, porcentaje) {
+  if (estatus === "Cancelada") return "progreso-cancelada";
+  if (estatus === "Finalizada") return "progreso-finalizada";
+  if (estatus === "Pendiente") return "progreso-pendiente";
+  if (porcentaje >= 100) return "progreso-finalizada";
+  return "progreso-activa";
+}
+
+function contarPorEstatus(actividades) {
+  const conteo = {
+    Todos: actividades.length,
+    Pendiente: 0,
+    Activa: 0,
+    Finalizada: 0,
+    Cancelada: 0,
+  };
+
+  actividades.forEach((act) => {
+    if (conteo[act.estatus] !== undefined) {
+      conteo[act.estatus]++;
+    }
+  });
+
+  return conteo;
+}
+
+function buscarActividadPorId(idactividad) {
+  return actividadesOriginales.find(
+    (act) => Number(act.idactividad) === Number(idactividad),
+  );
+}
+
+function buscarTareaPorId(idTarea) {
+  return tareasActuales.find(
+    (tarea) => Number(tarea.idTareas_Actividad) === Number(idTarea),
+  );
+}
+
+/* =========================================================
+   VALIDAR RANGO DE HORAS
+========================================================= */
+function cumpleFiltroHoras(horasActividad) {
+  const horas = Number(horasActividad || 0);
+
+  if (filtroHoras === "Todos") return true;
+  if (filtroHoras === "1-100") return horas >= 1 && horas <= 100;
+  if (filtroHoras === "101-200") return horas >= 101 && horas <= 200;
+  if (filtroHoras === "201-300") return horas >= 201 && horas <= 300;
+  if (filtroHoras === "301-480") return horas >= 301 && horas <= 480;
+
+  return true;
+}
+
+/* =========================================================
+   INICIO DE LA PÁGINA
+========================================================= */
+window.addEventListener("load", () => {
   listaActividades = document.getElementById("listaActividades");
   sinActividades = document.getElementById("sinActividades");
+  resumenProyectos = document.getElementById("resumenProyectos");
+  contenedorFiltros = document.getElementById("contenedorFiltros");
 
-  // INPUTS de actividad
   inputId = document.getElementById("actividadId");
   inputNombre = document.getElementById("nombreActividad");
   inputDescripcion = document.getElementById("descripcion");
@@ -75,243 +207,691 @@ window.addEventListener("load", () => {
   inputAlumnos = document.getElementById("totalAlumnos");
   inputInicio = document.getElementById("fechaInicio");
   inputFin = document.getElementById("fechaFin");
+  inputEstatus = document.getElementById("editEstatus");
 
-  // MODALES
+  inputTareaId = document.getElementById("tareaId");
+  inputNombreTarea = document.getElementById("nombreTarea");
+  inputHorasTarea = document.getElementById("horasTarea");
+  inputFechaInicioTarea = document.getElementById("fechaInicioTarea");
+  inputFechaFinTarea = document.getElementById("fechaFinTarea");
+
+  tituloModalActividad = document.getElementById("tituloModalActividad");
+  textoBtnGuardarProyecto = document.getElementById("textoBtnGuardarProyecto");
+
+  inputBuscar = document.getElementById("buscarResponsable");
+  inputFiltroHoras = document.getElementById("filtroHoras");
+  contenedorBusquedaResponsable = document.getElementById(
+    "contenedorBusquedaResponsable",
+  );
+  contenedorFiltroHorasAlumno = document.getElementById(
+    "contenedorFiltroHorasAlumno",
+  );
+
+  nombreActividadModal = document.getElementById("nombreActividadModal");
+  infoHoras = document.getElementById("infoHoras");
+  tablaTareas = document.getElementById("tablaTareas");
+  btnNuevaTarea = document.getElementById("btnNuevaTarea");
+
   modal = new bootstrap.Modal(document.getElementById("modalActividad"));
   modalTareas = new bootstrap.Modal(document.getElementById("modalTareas"));
   modalFormTarea = new bootstrap.Modal(
     document.getElementById("modalFormTarea"),
   );
 
-  // INPUTS TAREA
-  inputTareaId = document.getElementById("tareaId");
-  inputNombreTarea = document.getElementById("nombreTarea");
-  inputHorasTarea = document.getElementById("horasTarea");
-  inputFechaTarea = document.getElementById("fechaTarea");
+  rolActual = localStorage.getItem("rol")?.toLowerCase() || "";
 
-  // const rol = localStorage.getItem("rol");, esto es para obtener el rol del usuario del localStorage
-  const rol = localStorage.getItem("rol");
+  configurarVistaSegunRol();
 
-  // si el rol es "tutor" , "alumno" o "director", se oculta el boton de "nueva actividad", esto porque su rol no puede crear actividades
-  if (rol === "tutor" || rol === "director" || rol === "alumno") {
-    const btnNuevo = document.getElementById("btnNuevaActividad");
-    if (btnNuevo) btnNuevo.style.display = "none";
+  if (inputBuscar) {
+    inputBuscar.addEventListener("input", (e) => {
+      textoBusqueda = e.target.value;
+      aplicarFiltros();
+    });
   }
 
-  // CARGAR ACTIVIDADES
+  if (inputFiltroHoras) {
+    inputFiltroHoras.addEventListener("change", (e) => {
+      filtroHoras = e.target.value;
+      aplicarFiltros();
+    });
+  }
+
+  document
+    .getElementById("formActividad")
+    .addEventListener("submit", guardarActividad);
+  document.getElementById("formTarea").addEventListener("submit", guardarTarea);
+
   cargarActividades();
 });
 
-/* =========================
-   NUEVA ACTIVIDAD
-========================= */
-function abrirNuevo() {
-  // FUNCION PARA ABRIR EL MODAL DE NUEVA ACTIVIDAD
-  modal.show(); // MOSTRAR MODAL
+/* =========================================================
+   CONFIGURAR VISTA SEGÚN ROL
+========================================================= */
+function configurarVistaSegunRol() {
+  const btnNuevo = document.getElementById("btnNuevaActividad");
 
-  // LIMPIAR ID (esto es CLAVE para que sea "nuevo")
-  inputId.value = "";
+  if (rolActual !== "responsable" && btnNuevo) {
+    btnNuevo.style.display = "none";
+  }
 
-  // LIMPIAR CAMPOS
-  inputNombre.value = "";
-  inputDescripcion.value = "";
-  inputHoras.value = "";
-  inputAlumnos.value = "";
-  inputInicio.value = "";
-  inputFin.value = "";
+  if (rolActual === "responsable") {
+    if (contenedorBusquedaResponsable) {
+      contenedorBusquedaResponsable.style.display = "none";
+    }
+  } else {
+    if (contenedorBusquedaResponsable) {
+      contenedorBusquedaResponsable.style.display = "block";
+    }
+  }
+
+  if (rolActual === "alumno") {
+    if (contenedorFiltroHorasAlumno) {
+      contenedorFiltroHorasAlumno.style.display = "block";
+    }
+  } else {
+    if (contenedorFiltroHorasAlumno) {
+      contenedorFiltroHorasAlumno.style.display = "none";
+    }
+  }
+
+  if (rolActual !== "responsable" && filtroEstatus === "Pendiente") {
+    filtroEstatus = "Todos";
+  }
 }
 
-/* =========================
-   CARGAR ACTIVIDADES
-========================= */
+/* =========================================================
+   CARGAR ACTIVIDADES DESDE LA API
+========================================================= */
 async function cargarActividades() {
   try {
     const res = await fetch(API_URL, {
       headers: getHeaders(),
     });
 
-    if (res.status === 401) return cerrarSesion();
+    if (res.status === 401) {
+      cerrarSesion();
+      return;
+    }
 
-    const data = await res.json();
-    mostrarActividades(data);
+    const data = await leerJSONSeguro(res);
+
+    if (!res.ok) {
+      console.error("Error en el servidor al cargar actividades:", data);
+      alert(data.msg || "No se pudieron cargar los proyectos.");
+      return;
+    }
+
+    if (data?.sinPeriodo) {
+      actividadesOriginales = [];
+      alert(
+        data.msg ||
+          "Tu grupo aún no tiene definido su periodo de servicio social.",
+      );
+      aplicarFiltros();
+      return;
+    }
+
+    actividadesOriginales = Array.isArray(data) ? data : [];
+    aplicarFiltros();
   } catch (error) {
-    console.error(error);
+    console.error("Error al cargar actividades:", error);
+    alert("Error de conexión con el servidor.");
   }
 }
 
-/* =========================
-   MOSTRAR ACTIVIDADES
-========================= */
+/* =========================================================
+   RENDERIZAR RESUMEN
+========================================================= */
+function renderizarResumen(actividadesBase) {
+  const total = actividadesBase.length;
+
+  // Solo el alumno verá la barra azul grande
+  if (rolActual !== "alumno") {
+    resumenProyectos.innerHTML = "";
+    resumenProyectos.style.display = "none";
+    return;
+  }
+
+  resumenProyectos.style.display = "block";
+  resumenProyectos.innerHTML = `
+    <div class="resumen-card">
+      <div class="resumen-label">Total de proyectos</div>
+      <div class="resumen-value">${total}</div>
+    </div>
+  `;
+}
+
+/* =========================================================
+   RENDERIZAR FILTROS
+========================================================= */
+function renderizarFiltros(actividadesBase) {
+  if (rolActual === "alumno") {
+    contenedorFiltros.innerHTML = "";
+    return;
+  }
+
+  const conteo = contarPorEstatus(actividadesBase);
+
+  const filtros = [
+    {
+      estatus: "Todos",
+      etiqueta: "Todos",
+      cantidad: conteo.Todos,
+      clase: "filtro-todos",
+    },
+  ];
+
+  if (rolActual === "responsable") {
+    filtros.push({
+      estatus: "Pendiente",
+      etiqueta: "Pendientes",
+      cantidad: conteo.Pendiente,
+      clase: "filtro-pendiente",
+    });
+  }
+
+  filtros.push(
+    {
+      estatus: "Activa",
+      etiqueta: "Activas",
+      cantidad: conteo.Activa,
+      clase: "filtro-activa",
+    },
+    {
+      estatus: "Finalizada",
+      etiqueta: "Finalizadas",
+      cantidad: conteo.Finalizada,
+      clase: "filtro-finalizada",
+    },
+    {
+      estatus: "Cancelada",
+      etiqueta: "Canceladas",
+      cantidad: conteo.Cancelada,
+      clase: "filtro-cancelada",
+    },
+  );
+
+  contenedorFiltros.innerHTML = filtros
+    .map(
+      (filtro) => `
+        <button
+          class="filtro-card ${filtro.clase} ${filtroEstatus === filtro.estatus ? "activo" : ""}"
+          onclick="cambiarFiltro('${filtro.estatus}')"
+          type="button"
+        >
+          <span class="filtro-label">${filtro.etiqueta}</span>
+          <span class="filtro-value">${filtro.cantidad}</span>
+        </button>
+      `,
+    )
+    .join("");
+}
+
+/* =========================================================
+   APLICAR FILTROS
+========================================================= */
+function aplicarFiltros() {
+  let actividadesBase = [...actividadesOriginales];
+
+  if (textoBusqueda.trim() !== "") {
+    actividadesBase = actividadesBase.filter((act) =>
+      String(act.nombre_responsable || "")
+        .toLowerCase()
+        .includes(textoBusqueda.toLowerCase()),
+    );
+  }
+
+  if (rolActual === "alumno") {
+    actividadesBase = actividadesBase.filter((act) =>
+      cumpleFiltroHoras(act.horas_actividad),
+    );
+  }
+
+  renderizarResumen(actividadesBase);
+  renderizarFiltros(actividadesBase);
+
+  let filtradas = [...actividadesBase];
+
+  if (filtroEstatus !== "Todos") {
+    filtradas = filtradas.filter((act) => act.estatus === filtroEstatus);
+  }
+
+  mostrarActividades(filtradas);
+}
+
+/* =========================================================
+   CAMBIAR FILTRO DE ESTATUS
+========================================================= */
+function cambiarFiltro(estatus) {
+  filtroEstatus = estatus;
+  aplicarFiltros();
+}
+
+/* =========================================================
+   MOSTRAR ACTIVIDADES EN PANTALLA
+========================================================= */
 function mostrarActividades(actividades) {
   listaActividades.innerHTML = "";
-  const rol = localStorage.getItem("rol");
 
-  if (!actividades || actividades.length === 0) {
+  if (!actividades.length) {
     sinActividades.style.display = "block";
     return;
   }
 
   sinActividades.style.display = "none";
 
-  // ORDEN: no inscritos arriba, inscritos abajo
-  actividades.sort((a, b) => {
-    return (a.inscrito === 1) - (b.inscrito === 1);
-  });
-
   actividades.forEach((act) => {
-    const inscritos = act.inscritos || 0;
-    const cupo = act.totalAlumnosRequeridos || 0;
-    const restantes = cupo - inscritos;
-    const lleno = restantes <= 0;
-    const yaInscrito = act.inscrito == 1;
+    const inscritos = Number(act.inscritos || 0);
+    const cupo = Number(act.totalAlumnosRequeridos || 0);
+    const estatus = act.estatus || "Finalizada";
+    const statusClass = obtenerClaseStatus(estatus);
 
-    listaActividades.innerHTML += `
-      <div class="card mb-3 shadow ${yaInscrito ? "opacity-50" : ""}">
-        <div class="card-body text-center">
-          
-          <h5>${act.nombreActividad}</h5>
-          <p>${act.descripcion || "Sin descripción"}</p>
+    const horasProyecto = Number(act.horas_actividad || 0);
+    const horasCumplidas = Number(act.horas_cumplidas || 0);
+    const porcentajeAvance = Number(act.porcentaje_avance || 0);
+    const claseBarra = obtenerClaseBarraProgreso(estatus, porcentajeAvance);
 
-          <p> Responsable: ${act.responsable || "Sin asignar"}</p>
+    const hayCupo = inscritos < cupo;
+    const estaActiva = estatus === "Activa";
+    const yaInscrito = Number(act.inscrito) === 1 || act.inscrito === true;
 
-          <p> Horas: ${act.horas_actividad}</p>
+    const claseFila = yaInscrito
+      ? "actividad-row actividad-inscrita"
+      : "actividad-row";
 
-          <p> Cupo: ${inscritos} / ${cupo}</p>
-          <p> Disponibles: ${restantes}</p>
+    let accionesHTML = `
+      <button class="btn-tabla btn-ver" onclick="verTareas(${Number(act.idactividad)})">
+        Tareas
+      </button>
+    `;
 
-          <p> Inicio: ${act.fecha_alta?.split("T")[0]}</p>
-          <p> Fin: ${act.fechaTermino?.split("T")[0]}</p>
+    if (rolActual === "alumno") {
+      let textoBoton = "Inscribirse";
+      let claseBoton = "btn-unirme";
+      let deshabilitado = "";
 
-          <div class="mt-3 d-flex justify-content-center gap-2">
+      if (yaInscrito) {
+        textoBoton = "Inscrito";
+        claseBoton = "btn-inscrito";
+        deshabilitado = "disabled";
+      } else if (!estaActiva) {
+        textoBoton = "No disponible";
+        claseBoton = "btn-no-disponible";
+        deshabilitado = "disabled";
+      } else if (!hayCupo) {
+        textoBoton = "Cupo lleno";
+        claseBoton = "btn-cupo-lleno";
+        deshabilitado = "disabled";
+      }
 
-            <button class="btn btn-info btn-sm" onclick="verTareas(${act.idactividad})">
-              Tareas
-            </button>
+      accionesHTML += `
+        <button
+          class="btn-tabla ${claseBoton}"
+          onclick="unirme(${Number(act.idactividad)})"
+          ${deshabilitado}
+        >
+          ${textoBoton}
+        </button>
+      `;
+    }
 
-            ${
-              rol === "alumno"
-                ? `
-                <button 
-                  class="btn btn-sm ${
-                    yaInscrito
-                      ? "btn-secondary"
-                      : lleno
-                        ? "btn-danger"
-                        : "btn-success"
-                  }"
-                  onclick="unirme(${act.idactividad})"
-                  ${yaInscrito || lleno ? "disabled" : ""}
-                >
-                  ${yaInscrito ? "Inscrito" : lleno ? "Lleno" : "Unirme"}
-                </button>
-              `
-                : ""
-            }
+    if (rolActual === "responsable") {
+      accionesHTML += `
+        <button class="btn-tabla btn-edit" onclick="editarActividad(${Number(act.idactividad)})">
+          Editar
+        </button>
+        <button class="btn-tabla btn-del" onclick="eliminarActividad(${Number(act.idactividad)})">
+          Borrar
+        </button>
+      `;
+    }
 
-            ${
-              rol !== "alumno" && rol !== "tutor" && rol !== "director"
-                ? `
-                <button class="btn btn-warning btn-sm" onclick='editar(${JSON.stringify(act)})'>
-                  Editar
-                </button>
-                <button class="btn btn-danger btn-sm" onclick="eliminar(${act.idactividad})">
-                  Eliminar
-                </button>
-              `
-                : ""
-            }
+    const mostrarProgreso =
+      rolActual === "responsable" || rolActual === "director";
 
+    const progresoHTML = mostrarProgreso
+      ? `
+        <div class="bloque-progreso-proyecto">
+          <div class="progreso-proyecto-header">
+            <span class="progreso-proyecto-label">
+              Avance del proyecto
+            </span>
+            <span class="progreso-proyecto-valor">
+              ${horasCumplidas} / ${horasProyecto} hrs · ${porcentajeAvance}%
+            </span>
+          </div>
+
+          <div class="barra-progreso-proyecto-bg">
+            <div
+              class="barra-progreso-proyecto-fill ${claseBarra}"
+              style="width: ${porcentajeAvance}%"
+            ></div>
           </div>
         </div>
+      `
+      : "";
+
+    listaActividades.innerHTML += `
+      <div class="${claseFila}">
+        <div class="actividad-grid">
+          <div class="col-proyecto">
+            <span class="label-col">Proyecto</span>
+            <div class="nombre-proyecto">${escaparHTML(act.nombreActividad || "Sin nombre")}</div>
+            <div class="descripcion-proyecto">
+              ${escaparHTML(act.descripcion || "Sin descripción")}
+            </div>
+          </div>
+
+          <div class="col-info">
+            <span class="label-col">Responsable</span>
+            <div class="valor-col">${escaparHTML(act.nombre_responsable || "N/A")}</div>
+          </div>
+
+          <div class="col-info">
+            <span class="label-col">Horas</span>
+            <div class="valor-col">${horasProyecto} hrs</div>
+          </div>
+
+          <div class="col-info">
+            <span class="label-col">Cupo</span>
+            <div class="valor-col">${inscritos} de ${cupo}</div>
+          </div>
+
+          <div class="col-info">
+            <span class="label-col">Estatus</span>
+            <div class="valor-col">
+              <span class="status-pill ${statusClass}">
+                ${escaparHTML(estatus)}
+              </span>
+            </div>
+          </div>
+
+          <div class="col-info">
+            <span class="label-col">Inicio</span>
+            <div class="valor-col">${formatearFecha(act.fecha_alta)}</div>
+          </div>
+
+          <div class="col-info">
+            <span class="label-col">Término</span>
+            <div class="valor-col">${formatearFecha(act.fechaTermino)}</div>
+          </div>
+
+          <div class="btn-acciones-tabla">
+            ${accionesHTML}
+          </div>
+        </div>
+
+        ${progresoHTML}
       </div>
     `;
   });
 }
 
-// Unirse el alumno a las actividades
-async function unirme(idactividad) {
+/* =========================================================
+   ABRIR MODAL PARA NUEVO PROYECTO
+========================================================= */
+function abrirNuevo() {
+  inputId.value = "";
+  inputNombre.value = "";
+  inputDescripcion.value = "";
+  inputHoras.value = "";
+  inputAlumnos.value = "";
+  inputInicio.value = "";
+  inputFin.value = "";
+
+  if (inputEstatus) {
+    inputEstatus.value = "Pendiente";
+  }
+
+  if (document.getElementById("contenedorEstatus")) {
+    document.getElementById("contenedorEstatus").style.display = "none";
+  }
+
+  if (tituloModalActividad) {
+    tituloModalActividad.textContent = "Nuevo Proyecto";
+  }
+
+  if (textoBtnGuardarProyecto) {
+    textoBtnGuardarProyecto.textContent = "Guardar Proyecto";
+  }
+
+  modal.show();
+}
+
+/* =========================================================
+   EDITAR ACTIVIDAD
+========================================================= */
+function editarActividad(idactividad) {
+  const act = buscarActividadPorId(idactividad);
+
+  if (!act) {
+    alert("No se encontró la actividad a editar.");
+    return;
+  }
+
+  inputId.value = act.idactividad;
+  inputNombre.value = act.nombreActividad || "";
+  inputDescripcion.value = act.descripcion || "";
+  inputHoras.value = act.horas_actividad || "";
+  inputAlumnos.value = act.totalAlumnosRequeridos || "";
+  inputInicio.value = fechaInput(act.fecha_alta);
+  inputFin.value = fechaInput(act.fechaTermino);
+
+  if (inputEstatus) {
+    inputEstatus.value = act.estatus || "Pendiente";
+  }
+
+  if (document.getElementById("contenedorEstatus")) {
+    document.getElementById("contenedorEstatus").style.display = "block";
+  }
+
+  if (tituloModalActividad) {
+    tituloModalActividad.textContent = "Editar Proyecto";
+  }
+
+  if (textoBtnGuardarProyecto) {
+    textoBtnGuardarProyecto.textContent = "Actualizar Proyecto";
+  }
+
+  modal.show();
+}
+
+/* =========================================================
+   GUARDAR ACTIVIDAD
+========================================================= */
+async function guardarActividad(e) {
+  e.preventDefault();
+
+  if (inputFin.value < inputInicio.value) {
+    alert("La fecha de término no puede ser menor que la fecha de inicio.");
+    return;
+  }
+
+  const data = {
+    nombreActividad: inputNombre.value.trim(),
+    descripcion: inputDescripcion.value.trim(),
+    horas_actividad: Number(inputHoras.value),
+    fecha_alta: inputInicio.value,
+    fechaTermino: inputFin.value,
+    totalAlumnosRequeridos: Number(inputAlumnos.value),
+    estatus: inputEstatus.value,
+  };
+
   try {
-    const res = await fetch("http://127.0.0.1:3000/api/asignacion", {
+    const id = inputId.value;
+    const url = id ? `${API_URL}/${id}` : API_URL;
+    const method = id ? "PUT" : "POST";
+
+    const res = await fetch(url, {
+      method,
+      headers: getHeaders(),
+      body: JSON.stringify(data),
+    });
+
+    if (res.status === 401) {
+      cerrarSesion();
+      return;
+    }
+
+    const respuesta = await leerJSONSeguro(res);
+
+    if (!res.ok) {
+      alert(respuesta.msg || "Error al guardar el proyecto.");
+      return;
+    }
+
+    modal.hide();
+    cargarActividades();
+  } catch (error) {
+    console.error("Error al guardar actividad:", error);
+    alert("Error de conexión con el servidor.");
+  }
+}
+
+/* =========================================================
+   ELIMINAR / CANCELAR ACTIVIDAD
+========================================================= */
+async function eliminarActividad(idactividad) {
+  if (!confirm("¿Seguro que quieres CANCELAR este proyecto?")) {
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_URL}/${idactividad}`, {
+      method: "DELETE",
+      headers: getHeaders(),
+    });
+
+    if (res.status === 401) {
+      cerrarSesion();
+      return;
+    }
+
+    const respuesta = await leerJSONSeguro(res);
+
+    if (!res.ok) {
+      alert(respuesta.msg || "No se pudo cancelar el proyecto.");
+      return;
+    }
+
+    cargarActividades();
+  } catch (error) {
+    console.error("Error al cancelar actividad:", error);
+    alert("Error de conexión con el servidor.");
+  }
+}
+
+/* =========================================================
+   INSCRIPCIÓN DEL ALUMNO A UNA ACTIVIDAD
+========================================================= */
+async function unirme(idactividad) {
+  if (!confirm("¿Estás seguro de que deseas inscribirte en esta actividad?")) {
+    return;
+  }
+
+  try {
+    const res = await fetch(API_URL_ASIGNACION, {
       method: "POST",
       headers: getHeaders(),
       body: JSON.stringify({ idactividad }),
     });
 
-    const data = await res.json();
+    if (res.status === 401) {
+      cerrarSesion();
+      return;
+    }
 
-    // SI HAY ERROR
+    const data = await leerJSONSeguro(res);
+
     if (!res.ok) {
-      const msg = data.msg?.toLowerCase() || "";
+      const msg = String(data.msg || "").toLowerCase();
 
       if (msg.includes("480") || msg.includes("horas")) {
-        alert("⚠️ No puedes unirte: superarías las 480 horas");
-      } else if (msg.includes("llena")) {
-        alert("❌ Esta actividad ya está llena");
+        alert("⚠️ No puedes unirte: superarías el límite de 480 horas.");
+      } else if (msg.includes("llena") || msg.includes("cupo")) {
+        alert("❌ Esta actividad ya alcanzó su cupo máximo.");
       } else if (msg.includes("inscrito")) {
-        alert("⚠️ Ya estás inscrito en esta actividad");
+        alert("⚠️ Ya te encuentras inscrito en esta actividad.");
       } else {
-        alert(data.msg || "Error desconocido");
+        alert(data.msg || "Hubo un error al procesar tu inscripción.");
       }
 
       return;
     }
 
-    // ÉXITO
-    alert(data.msg || "✅ Te uniste a la actividad");
-
-    // Recargar lista para actualizar botones, cupos, etc.
+    alert("✅ ¡Inscripción exitosa! Ahora eres parte de esta actividad.");
     cargarActividades();
   } catch (error) {
     console.error("Error en unirme:", error);
-    alert("Error de conexión con el servidor");
+    alert("Error de conexión con el servidor.");
   }
 }
 
-/* =========================
-   TAREAS
-========================= */
-
-// VER TAREAS
+/* =========================================================
+   VER TAREAS DE UNA ACTIVIDAD
+========================================================= */
 async function verTareas(idactividad) {
   idActividadActual = idactividad;
 
+  const actividadActual = buscarActividadPorId(idactividad);
+
+  if (!actividadActual) {
+    alert("No se encontró la actividad seleccionada.");
+    return;
+  }
+
   try {
-    const resAct = await fetch(API_URL, {
-      headers: getHeaders(),
-    });
-    const actividades = await resAct.json();
-
-    actividadActual = actividades.find((a) => a.idactividad == idactividad);
-
-    document.getElementById("nombreActividadModal").textContent =
-      actividadActual?.nombreActividad || "";
+    nombreActividadModal.textContent = actividadActual.nombreActividad || "";
 
     const res = await fetch(`${API_TAREAS}/${idactividad}`, {
       headers: getHeaders(),
     });
 
-    const data = await res.json();
+    if (res.status === 401) {
+      cerrarSesion();
+      return;
+    }
 
-    let total = 0;
+    const data = await leerJSONSeguro(res);
+
+    if (!res.ok) {
+      alert(data.msg || "No se pudieron cargar las tareas.");
+      return;
+    }
+
+    tareasActuales = Array.isArray(data) ? data : [];
+
+    let totalHorasUsadas = 0;
     let html = "";
 
-    const rol = localStorage.getItem("rol");
-
-    data.forEach((t) => {
-      total += Number(t.horas_Tareas);
+    tareasActuales.forEach((tarea) => {
+      totalHorasUsadas += Number(tarea.horas_Tareas || 0);
 
       html += `
         <tr>
-          <td>${t.nombre_tarea}</td>
-          <td>${t.horas_Tareas}</td>
-          <td>${t.fechaEjecucion}</td>
-          <td>
+          <td>${escaparHTML(tarea.nombre_tarea || "")}</td>
+          <td>${Number(tarea.horas_Tareas || 0)}</td>
+          <td>${formatearFecha(tarea.fechaInicio)}</td>
+          <td>${formatearFecha(tarea.fechaFin)}</td>
+          <td class="text-center">
             ${
-              rol !== "tutor" && rol !== "director"
+              rolActual === "responsable"
                 ? `
-              <button class="btn btn-warning btn-sm" onclick="editarTarea(${t.idTareas_Actividad}, '${t.nombre_tarea}', ${t.horas_Tareas}, '${t.fechaEjecucion}')">✏️</button>
-              <button class="btn btn-danger btn-sm" onclick="eliminarTarea(${t.idTareas_Actividad})">🗑</button>
-            `
+                  <button
+                    class="btn btn-warning btn-sm"
+                    onclick="editarTarea(${Number(tarea.idTareas_Actividad)})"
+                    title="Editar tarea"
+                  >
+                    ✏️
+                  </button>
+                  <button
+                    class="btn btn-danger btn-sm"
+                    onclick="eliminarTarea(${Number(tarea.idTareas_Actividad)})"
+                    title="Eliminar tarea"
+                  >
+                    🗑
+                  </button>
+                `
                 : `<span class="text-muted">Solo lectura</span>`
             }
           </td>
@@ -319,227 +899,213 @@ async function verTareas(idactividad) {
       `;
     });
 
-    document.getElementById("tablaTareas").innerHTML = html;
-
-    const totalActividad = Number(actividadActual.horas_actividad);
-    const restantes = totalActividad - total;
-
-    const btnNueva = document.querySelector("#modalTareas .btn-success");
-
-    // BLOQUEO POR ROL
-    if (rol === "tutor" || rol === "director" || rol === "alumno") {
-      btnNueva.style.display = "none";
-    } else {
-      if (restantes <= 0) {
-        btnNueva.disabled = true;
-        btnNueva.textContent = "Horas completas";
-      } else {
-        btnNueva.disabled = false;
-        btnNueva.textContent = "+ Nueva tarea";
-      }
+    if (!tareasActuales.length) {
+      html = `
+        <tr>
+          <td colspan="5" class="text-center text-muted">
+            No hay tareas registradas para este proyecto.
+          </td>
+        </tr>
+      `;
     }
 
-    const info = document.getElementById("infoHoras");
+    tablaTareas.innerHTML = html;
 
-    info.textContent = `Horas usadas: ${total} / ${totalActividad} | Restantes: ${restantes}`;
+    const totalActividad = Number(actividadActual.horas_actividad || 0);
+    const restantes = totalActividad - totalHorasUsadas;
 
-    info.className =
+    if (rolActual === "responsable") {
+      btnNuevaTarea.style.display = "inline-block";
+      btnNuevaTarea.disabled = restantes <= 0;
+      btnNuevaTarea.textContent =
+        restantes <= 0 ? "Horas completas" : "+ Nueva tarea";
+    } else {
+      btnNuevaTarea.style.display = "none";
+    }
+
+    infoHoras.textContent = `Horas usadas: ${totalHorasUsadas} / ${totalActividad} | Restantes: ${restantes}`;
+    infoHoras.className =
       restantes < 0 ? "mt-2 fw-bold text-danger" : "mt-2 fw-bold text-success";
 
     modalTareas.show();
   } catch (error) {
-    console.error(error);
+    console.error("Error al ver tareas:", error);
+    alert("Error de conexión con el servidor.");
   }
 }
 
-// ABRIR FORM
+/* =========================================================
+   ABRIR FORMULARIO PARA NUEVA TAREA
+========================================================= */
 function abrirNuevaTarea() {
-  const rol = localStorage.getItem("rol"); // PROTECCIÓN EXTRA
-
-  if (rol === "tutor" || rol === "director" || rol === "alumno") {
-    alert("No tienes permisos para agregar tareas");
+  if (rolActual !== "responsable") {
+    alert("No tienes permisos.");
     return;
   }
 
   inputTareaId.value = "";
   inputNombreTarea.value = "";
   inputHorasTarea.value = "";
-  inputFechaTarea.value = "";
+  inputFechaInicioTarea.value = "";
+  inputFechaFinTarea.value = "";
+
+  const actividadActual = buscarActividadPorId(idActividadActual);
+
+  if (actividadActual) {
+    const fechaProyectoInicio = fechaInput(actividadActual.fecha_alta);
+    const fechaProyectoFin = fechaInput(actividadActual.fechaTermino);
+
+    inputFechaInicioTarea.min = fechaProyectoInicio;
+    inputFechaInicioTarea.max = fechaProyectoFin;
+    inputFechaFinTarea.min = fechaProyectoInicio;
+    inputFechaFinTarea.max = fechaProyectoFin;
+  }
 
   modalFormTarea.show();
 }
 
-// EDITAR TAREA
-function editarTarea(id, nombre, horas, fecha) {
-  inputTareaId.value = id;
-  inputNombreTarea.value = nombre;
-  inputHorasTarea.value = horas;
-  inputFechaTarea.value = fecha;
+/* =========================================================
+   EDITAR TAREA
+========================================================= */
+function editarTarea(idTarea) {
+  const tarea = buscarTareaPorId(idTarea);
+
+  if (!tarea) {
+    alert("No se encontró la tarea.");
+    return;
+  }
+
+  inputTareaId.value = tarea.idTareas_Actividad;
+  inputNombreTarea.value = tarea.nombre_tarea || "";
+  inputHorasTarea.value = tarea.horas_Tareas || "";
+  inputFechaInicioTarea.value = fechaInput(tarea.fechaInicio);
+  inputFechaFinTarea.value = fechaInput(tarea.fechaFin);
+
+  const actividadActual = buscarActividadPorId(idActividadActual);
+
+  if (actividadActual) {
+    const fechaProyectoInicio = fechaInput(actividadActual.fecha_alta);
+    const fechaProyectoFin = fechaInput(actividadActual.fechaTermino);
+
+    inputFechaInicioTarea.min = fechaProyectoInicio;
+    inputFechaInicioTarea.max = fechaProyectoFin;
+    inputFechaFinTarea.min = fechaProyectoInicio;
+    inputFechaFinTarea.max = fechaProyectoFin;
+  }
 
   modalFormTarea.show();
 }
 
-// ELIMINAR
-async function eliminarTarea(id) {
-  await fetch(`${API_TAREAS}/${id}`, {
-    method: "DELETE",
-    headers: getHeaders(),
-  });
-
-  verTareas(idActividadActual);
-}
-
-/* =========================
+/* =========================================================
    GUARDAR TAREA
-========================= */
-document.addEventListener("submit", async (e) => {
-  if (e.target.id !== "formTarea") return;
-
+========================================================= */
+async function guardarTarea(e) {
   e.preventDefault();
+
+  if (inputFechaFinTarea.value < inputFechaInicioTarea.value) {
+    alert("La fecha de fin no puede ser menor que la fecha de inicio.");
+    return;
+  }
+
+  const actividadActual = buscarActividadPorId(idActividadActual);
+
+  if (actividadActual) {
+    const fechaProyectoInicio = fechaInput(actividadActual.fecha_alta);
+    const fechaProyectoFin = fechaInput(actividadActual.fechaTermino);
+
+    if (
+      inputFechaInicioTarea.value < fechaProyectoInicio ||
+      inputFechaFinTarea.value > fechaProyectoFin
+    ) {
+      alert(
+        `La tarea debe estar dentro del rango del proyecto: ${fechaProyectoInicio} a ${fechaProyectoFin}`,
+      );
+      return;
+    }
+  }
 
   const id = inputTareaId.value;
 
   const data = {
     idactividad: idActividadActual,
-    nombre_tarea: inputNombreTarea.value,
-    horas_Tareas: inputHorasTarea.value,
-    fechaEjecucion: inputFechaTarea.value,
+    nombre_tarea: inputNombreTarea.value.trim(),
+    horas_Tareas: Number(inputHorasTarea.value),
+    fechaInicio: inputFechaInicioTarea.value,
+    fechaFin: inputFechaFinTarea.value,
   };
 
   try {
-    if (!id) {
-      const res = await fetch(API_TAREAS, {
-        method: "POST",
-        headers: getHeaders(),
-        body: JSON.stringify(data),
-      });
+    const url = id ? `${API_TAREAS}/${id}` : API_TAREAS;
+    const method = id ? "PUT" : "POST";
 
-      const result = await res.json();
+    const res = await fetch(url, {
+      method,
+      headers: getHeaders(),
+      body: JSON.stringify(data),
+    });
 
-      if (!res.ok) {
-        alert("Ya superaste las horas globales de la actividad");
-        return;
-      }
-    } else {
-      const res = await fetch(`${API_TAREAS}/${id}`, {
-        method: "PUT",
-        headers: getHeaders(),
-        body: JSON.stringify(data),
-      });
+    if (res.status === 401) {
+      cerrarSesion();
+      return;
+    }
 
-      const result = await res.json();
+    const respuesta = await leerJSONSeguro(res);
 
-      if (!res.ok) {
-        alert("Ya superaste las horas globales de la actividad");
-        return;
-      }
+    if (!res.ok) {
+      alert(respuesta.msg || "Error al guardar la tarea.");
+      return;
     }
 
     modalFormTarea.hide();
     verTareas(idActividadActual);
   } catch (error) {
-    console.error(error);
+    console.error("Error al guardar tarea:", error);
+    alert("Error de conexión con el servidor.");
   }
-});
-
-/* =========================
-   CREAR / EDITAR ACTIVIDAD
-========================= */
-document.addEventListener("submit", async (e) => {
-  if (e.target.id !== "formActividad") return;
-
-  e.preventDefault();
-
-  const id = inputId.value;
-
-  const data = {
-    nombreActividad: inputNombre.value,
-    descripcion: inputDescripcion.value,
-    horas_actividad: inputHoras.value,
-    fecha_alta: inputInicio.value,
-    fechaTermino: inputFin.value,
-    totalAlumnosRequeridos: inputAlumnos.value,
-  };
-
-  try {
-    let res;
-
-    if (!id) {
-      res = await fetch(API_URL, {
-        method: "POST",
-        headers: getHeaders(),
-        body: JSON.stringify(data),
-      });
-    } else {
-      res = await fetch(`${API_URL}/${id}`, {
-        method: "PUT",
-        headers: getHeaders(),
-        body: JSON.stringify(data),
-      });
-    }
-
-    if (res.status === 401) return cerrarSesion();
-
-    if (res.status === 403) {
-      alert("No tienes permisos");
-      return;
-    }
-
-    const result = await res.json();
-
-    if (!result.success) {
-      alert("Error al guardar");
-      return;
-    }
-
-    modal.hide();
-    cargarActividades();
-  } catch (error) {
-    console.error(error);
-  }
-});
-
-/* =========================
-   EDITAR ACTIVIDAD
-========================= */
-function editar(act) {
-  modal.show();
-
-  inputId.value = act.idactividad;
-  inputNombre.value = act.nombreActividad;
-  inputDescripcion.value = act.descripcion;
-  inputHoras.value = act.horas_actividad;
-  inputAlumnos.value = act.totalAlumnosRequeridos || "";
-  inputInicio.value = act.fecha_alta?.split("T")[0];
-  inputFin.value = act.fechaTermino?.split("T")[0];
 }
 
-/* =========================
-   ELIMINAR ACTIVIDAD
-========================= */
-async function eliminar(id) {
-  if (!confirm("¿Seguro que quieres eliminar esta actividad?")) return;
+/* =========================================================
+   ELIMINAR TAREA
+========================================================= */
+async function eliminarTarea(idTarea) {
+  if (!confirm("¿Seguro que deseas eliminar esta tarea?")) {
+    return;
+  }
 
   try {
-    await fetch(`${API_URL}/${id}`, {
+    const res = await fetch(`${API_TAREAS}/${idTarea}`, {
       method: "DELETE",
       headers: getHeaders(),
     });
 
-    cargarActividades();
+    if (res.status === 401) {
+      cerrarSesion();
+      return;
+    }
+
+    const respuesta = await leerJSONSeguro(res);
+
+    if (!res.ok) {
+      alert(respuesta.msg || "No se pudo eliminar la tarea.");
+      return;
+    }
+
+    verTareas(idActividadActual);
   } catch (error) {
-    console.error(error);
+    console.error("Error al eliminar tarea:", error);
+    alert("Error de conexión con el servidor.");
   }
 }
 
-/* =========================
-   GLOBALES, son las funciones que se llaman desde el HTML
-========================= */
-window.editar = editar;
-window.eliminar = eliminar;
+/* =========================================================
+   EXPONER FUNCIONES GLOBALES
+========================================================= */
 window.abrirNuevo = abrirNuevo;
+window.cambiarFiltro = cambiarFiltro;
 window.verTareas = verTareas;
 window.abrirNuevaTarea = abrirNuevaTarea;
+window.editarActividad = editarActividad;
+window.eliminarActividad = eliminarActividad;
 window.editarTarea = editarTarea;
 window.eliminarTarea = eliminarTarea;
 window.unirme = unirme;
