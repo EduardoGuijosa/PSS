@@ -60,24 +60,24 @@
       const rol = (localStorage.getItem("rol") || "").toLowerCase().trim();
       const infoDiv = document.getElementById("quickInfo");
 
-      if (rol === "administrador" || rol === "director") {
+      if (rol === "director") {
         infoDiv.innerHTML = `
       <h2>¿Qué puedes hacer en el sistema?</h2>
 
       <div class="info-grid">
         <div class="info-box">
-          <h3><i class="fas fa-users-cog"></i> 1. Gestión de usuarios</h3>
+          <h3><i class="fas fa-users-cog"></i> 1. Proyectos</h3>
           <p>
-            Aquí puedes consultar, registrar, editar y administrar
-            los usuarios del sistema según su rol.
+            Aquí puedes consultar los proyectos disponibles, asi como ver los responsables
+            y su estatus.
           </p>
         </div>
 
         <div class="info-box">
-          <h3><i class="fas fa-layer-group"></i> 2. Gestión de grupos</h3>
+          <h3><i class="fas fa-layer-group"></i> 2. Grupos</h3>
           <p>
-            Aquí puedes consultar los grupos registrados y dar
-            seguimiento general a su organización.
+            Aquí puedes consultar los grupos para saber el total de alumnos liberados por grupo,
+            además puedes ver alumnos por grupo para obtener mas detalles.
           </p>
         </div>
       </div>
@@ -95,9 +95,9 @@
         </div>
 
         <div class="info-box">
-          <h3><i class="fas fa-user-check"></i> 2. Seguimiento de alumnos</h3>
+          <h3><i class="fas fa-user-check"></i> 2. Grupos</h3>
           <p>
-            Revisa el avance de los alumnos de tu grupo y consulta
+            Revisa el avance de los alumnos de tus grupos y consulta
             su progreso en el servicio social.
           </p>
         </div>
@@ -147,7 +147,7 @@
           <p>
             Al crear un proyecto, su estatus inicial será
             <strong>"Pendiente"</strong>. Después de agregar sus tareas,
-            podrás cambiarlo a <strong>"Activa"</strong>.
+            automaticamente se cambiará a <strong>"Activa"</strong>.
           </p>
         </div>
 
@@ -167,6 +167,26 @@
           </p>
         </div>
       </div>
+    `;
+      } else if (rol === "administrador") {
+        infoDiv.innerHTML = `
+      <h2>¿Qué puedes hacer en el sistema?</h2>
+
+      <div class="info-grid">
+        <div class="info-box">
+          <h3><i class="fas fa-folder-open"></i> 1. Gestión de Usuarios</h3>
+          <p>
+            Aqui puedes crear, editar y eliminar usuarios del sistema.
+          </p>
+        </div>
+
+        <div class="info-box">
+          <h3><i class="fas fa-user-check"></i> 2. Gestión de Grupos</h3>
+          <p>
+            Aquí puedes crear, editar y eliminar grupos, asi como asignar tutores, 
+            periodo de realización del servicio social y turno del grupo.
+          </p>
+        </div>
     `;
       } else {
         infoDiv.innerHTML = `
