@@ -27,8 +27,8 @@
             <div>
               <h1 class="admin-title">Panel de Administración</h1>
               <p class="admin-subtitle">
-                Consulta, busca y da de alta alumnos, tutores, responsables y
-                subdirector.
+                Consulta, busca, registra, edita e inactiva alumnos, tutores,
+                responsables y subdirector.
               </p>
             </div>
           </div>
@@ -125,30 +125,6 @@
             </div>
           </div>
 
-          <div
-            class="card shadow-sm border-0 mb-4"
-            id="cardFormularioAdmin"
-            style="display: none"
-          >
-            <div
-              class="card-header bg-white py-3 d-flex justify-content-between align-items-center"
-            >
-              <h5 class="mb-0" id="tituloFormulario">Nuevo registro</h5>
-              <button
-                type="button"
-                class="btn btn-outline-secondary btn-sm"
-                id="btnCerrarFormulario"
-              >
-                Cerrar
-              </button>
-            </div>
-
-            <div class="card-body">
-              <div id="alertaAdmin" class="alert d-none" role="alert"></div>
-              <div id="formularioAdminContainer"></div>
-            </div>
-          </div>
-
           <div class="card shadow-sm border-0">
             <div class="card-header bg-white py-3">
               <h5 class="mb-0" id="tituloListado">Alumnos registrados</h5>
@@ -162,7 +138,7 @@
                   <thead class="table-light" id="theadAdminUsuarios"></thead>
                   <tbody id="listaAdminUsuarios">
                     <tr>
-                      <td colspan="6" class="text-center text-muted py-4">
+                      <td colspan="7" class="text-center text-muted py-4">
                         Cargando registros...
                       </td>
                     </tr>
@@ -175,6 +151,53 @@
       </div>
     </div>
 
+    <!-- MODAL ADMIN -->
+    <div
+      class="modal fade"
+      id="modalAdminRegistro"
+      tabindex="-1"
+      aria-labelledby="tituloModalAdmin"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="tituloModalAdmin">Nuevo registro</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Cerrar"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <div id="alertaAdminModal" class="alert d-none" role="alert"></div>
+            <div id="formularioAdminContainer"></div>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              id="btnGuardarModal"
+              form="formAdmin"
+            >
+              Guardar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/js/layout.js"></script>
     <script src="/js/admin-usuarios.js"></script>
   </body>

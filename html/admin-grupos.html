@@ -24,20 +24,14 @@
 
       <div class="content">
         <div class="container mt-4">
-          <!-- =========================================================
-               ENCABEZADO
-          ========================================================= -->
           <div class="admin-grupos-header mb-4">
             <h1 class="titulo-admin-grupos">Gestión de Grupos</h1>
             <p class="subtitulo-admin-grupos mb-0">
-              Administra los grupos, asigna tutor y define el periodo de
-              servicio social para cada grupo.
+              Administra los grupos, asigna tutor, cambia el turno y define el
+              periodo de servicio social para cada grupo.
             </p>
           </div>
 
-          <!-- =========================================================
-               RESUMEN SUPERIOR
-          ========================================================= -->
           <div class="row g-3 mb-4">
             <div class="col-md-4">
               <div class="resumen-card resumen-azul">
@@ -70,9 +64,6 @@
             </div>
           </div>
 
-          <!-- =========================================================
-               FILTROS
-          ========================================================= -->
           <div class="card shadow-sm border-0 mb-4">
             <div class="card-header bg-white py-3">
               <h5 class="mb-0">Filtros</h5>
@@ -125,9 +116,6 @@
             </div>
           </div>
 
-          <!-- =========================================================
-               TABLA DE GRUPOS
-          ========================================================= -->
           <div class="card shadow-sm border-0">
             <div
               class="card-header bg-white py-3 d-flex justify-content-between align-items-center"
@@ -191,6 +179,8 @@
           </div>
 
           <div class="modal-body">
+            <div id="alertaGrupoModal" class="alert d-none" role="alert"></div>
+
             <input type="hidden" id="grupoId" />
 
             <div class="mb-3">
@@ -204,13 +194,14 @@
             </div>
 
             <div class="mb-3">
-              <label class="form-label fw-bold">Turno</label>
-              <input
-                type="text"
-                id="grupoTurno"
-                class="form-control"
-                readonly
-              />
+              <label for="grupoTurno" class="form-label fw-bold">Turno</label>
+              <select id="grupoTurno" class="form-select" required>
+                <option value="Matutino">Matutino</option>
+                <option value="Vespertino">Vespertino</option>
+              </select>
+              <small class="text-muted">
+                Aquí puedes cambiar el turno del grupo cuando sea necesario.
+              </small>
             </div>
 
             <div class="mb-3">

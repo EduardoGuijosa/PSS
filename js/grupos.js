@@ -223,46 +223,5 @@ function verDetalles(id) {
    FUNCIÓN GLOBAL
 ========================================================= */
 
-/*
-  ¿POR QUÉ HARÍA FALTA HACER ESTO?
-
-  En este archivo, la función verDetalles() se llama desde un botón
-  creado dinámicamente con innerHTML, así:
-
-  onclick="verDetalles(3)"
-
-  Cuando una función se llama desde un onclick dentro del HTML,
-  esa función debe existir en el objeto global del navegador, que es window.
-
-  En algunos casos, si no se expone globalmente, puede salir un error como:
-  "verDetalles is not defined"
-
-  Si te pasa eso, puedes agregar esta línea:
-  window.verDetalles = verDetalles;
-
-  En tu caso puede funcionar sin ponerla, pero dejarla explícita es más seguro
-  cuando el HTML se construye dinámicamente.
-*/
-
 // Se expone la función verDetalles al objeto global window
 window.verDetalles = verDetalles;
-
-/*
-RESUMEN GENERAL DEL ARCHIVO grupos.js
-
-Este archivo se encarga de controlar la vista de grupos.
-
-Sus funciones principales son:
-
-1. Validar si la sesión sigue activa.
-2. Consultar al backend la lista de grupos.
-3. Guardar los grupos originales en memoria.
-4. Filtrar grupos por nombre usando el buscador.
-5. Ocultar el filtro al tutor porque normalmente tiene pocos grupos.
-6. Construir y mostrar la tabla de grupos.
-7. Permitir ir a la vista de alumnos de un grupo específico.
-8. Exponer la función verDetalles para que pueda llamarse desde botones creados dinámicamente.
-
-En pocas palabras, este archivo conecta la vista de grupos con el backend,
-permite buscar grupos y redirige a la vista donde se muestran los alumnos.
-*/

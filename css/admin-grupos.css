@@ -195,3 +195,68 @@
     font-size: 1.2rem;
   }
 }
+/* =========================================================
+   BADGES DE TUTOR
+========================================================= */
+.badge-tutor {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.badge-tutor-asignado {
+  background: #e8f7ee;
+  color: #198754;
+}
+
+.badge-tutor-sin {
+  background: #f1f3f5;
+  color: #6c757d;
+}
+
+.badge-tutor-inactivo {
+  background: #fdeaea;
+  color: #dc3545;
+}
+
+.badge-tutor-baja {
+  background: #fff4db;
+  color: #b7791f;
+}
+
+/* =========================================================
+   TABLA
+========================================================= */
+.nombre-grupo-tabla {
+  font-weight: 700;
+}
+
+.meta-grupo-tabla {
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+.periodo-vacio {
+  color: #6c757d;
+  font-style: italic;
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+#modalGrupo .modal-content {
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+#modalGrupo .modal-header,
+#modalGrupo .modal-footer {
+  border: none;
+}
+
+#alertaGrupoModal {
+  margin-bottom: 16px;
+}

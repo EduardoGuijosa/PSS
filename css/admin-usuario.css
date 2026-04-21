@@ -161,3 +161,91 @@
     width: 100%;
   }
 }
+/* =========================================================
+   MODAL ADMIN
+========================================================= */
+#modalAdminRegistro .modal-content {
+  border: 0;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+#modalAdminRegistro .modal-header {
+  border-bottom: 1px solid #eef1f5;
+}
+
+#modalAdminRegistro .modal-footer {
+  border-top: 1px solid #eef1f5;
+}
+
+.admin-form-note {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  color: #495057;
+  font-size: 0.95rem;
+}
+
+/* =========================================================
+   ESTATUS
+========================================================= */
+.estado-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.estado-activo {
+  background: #e8f7ee;
+  color: #198754;
+}
+
+.estado-inactivo {
+  background: #fdeaea;
+  color: #dc3545;
+}
+
+.estado-baja {
+  background: #fff4db;
+  color: #b7791f;
+}
+
+/* =========================================================
+   ACCIONES TABLA
+========================================================= */
+.acciones-admin {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.acciones-admin .btn {
+  min-width: 90px;
+}
+
+.tabla-admin-usuarios th:last-child,
+.tabla-admin-usuarios td:last-child {
+  white-space: nowrap;
+}
+
+.tabla-admin-usuarios td {
+  vertical-align: middle;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media (max-width: 768px) {
+  .acciones-admin {
+    flex-direction: column;
+  }
+
+  .acciones-admin .btn {
+    width: 100%;
+  }
+}

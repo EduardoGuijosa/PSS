@@ -102,6 +102,7 @@ function configurarMenu() {
 
   // ADMINISTRADOR
   if (rol === "administrador") {
+    if (elementos.btnPortada) elementos.btnPortada.style.display = "block";
     if (elementos.btnAdminUsuarios) {
       elementos.btnAdminUsuarios.style.display = "block";
     }

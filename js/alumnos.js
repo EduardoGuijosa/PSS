@@ -1,250 +1,255 @@
-/* =========================================================
-   RECARGA SI LA PÁGINA VIENE DE LA CACHÉ DEL NAVEGADOR
-========================================================= */
+// =========================================================
+// RECARGA LA PÁGINA SI VIENE DESDE LA CACHÉ DEL NAVEGADOR
+// =========================================================
 window.addEventListener("pageshow", function (event) {
-  if (event.persisted) window.location.reload();
+  if (event.persisted) window.location.reload(); // si la página fue restaurada desde caché (botón atrás/adelante), se recarga para evitar datos viejos
 });
 
-/* =========================================================
-   URL DEL ENDPOINT
-========================================================= */
-const API_URL = "http://127.0.0.1:3000/api/alumnos-grupo";
+// =========================================================
+// URL DEL ENDPOINT
+// =========================================================
+const API_URL = "http://127.0.0.1:3000/api/alumnos-grupo"; // endpoint que devuelve los alumnos de un grupo específico
 
-/* =========================================================
-   VALIDAR SESIÓN
-========================================================= */
+// =========================================================
+// VALIDAR SESIÓN
+// =========================================================
 (function validarSesion() {
-  const usuario = localStorage.getItem("usuario");
-  const rol = localStorage.getItem("rol");
+  const usuario = localStorage.getItem("usuario"); // obtiene el usuario guardado en localStorage
+  const rol = localStorage.getItem("rol"); // obtiene el rol guardado
 
   if (!usuario || !rol) {
-    window.location.replace("/index.html");
+    // si falta usuario o rol, no hay sesión válida
+    window.location.replace("/index.html"); // manda al login
   }
 })();
 
-/* =========================================================
-   VARIABLES GLOBALES
-========================================================= */
-let listaAlumnos;
-let sinAlumnos;
-let alumnosOriginales = [];
-let filtroActual = "todos";
-let textoBusquedaAlumno = "";
+// =========================================================
+// VARIABLES GLOBALES
+// =========================================================
+let listaAlumnos; // referencia al contenedor o tbody donde se mostrarán los alumnos
+let sinAlumnos; // referencia al mensaje de "sin alumnos"
+let alumnosOriginales = []; // arreglo original con todos los alumnos traídos del servidor
+let filtroActual = "todos"; // filtro actual: todos, liberados o pendientes
+let textoBusquedaAlumno = ""; // texto escrito en el buscador
 
-/* =========================================================
-   INICIO
-========================================================= */
+// =========================================================
+// INICIO
+// =========================================================
 window.addEventListener("load", () => {
-  listaAlumnos = document.getElementById("listaAlumnos");
-  sinAlumnos = document.getElementById("sinAlumnos");
+  listaAlumnos = document.getElementById("listaAlumnos"); // obtiene el contenedor de filas de alumnos
+  sinAlumnos = document.getElementById("sinAlumnos"); // obtiene el elemento del mensaje cuando no hay alumnos
 
-  const inputBuscarAlumno = document.getElementById("buscarAlumno");
+  const inputBuscarAlumno = document.getElementById("buscarAlumno"); // input de búsqueda por nombre o matrícula
   const btnLimpiarBusquedaAlumno = document.getElementById(
-    "btnLimpiarBusquedaAlumno",
+    "btnLimpiarBusquedaAlumno", // botón para limpiar búsqueda
   );
 
   if (inputBuscarAlumno) {
     inputBuscarAlumno.addEventListener("input", (e) => {
-      textoBusquedaAlumno = e.target.value;
-      aplicarFiltroAlumno();
+      textoBusquedaAlumno = e.target.value; // guarda el texto actual del buscador
+      aplicarFiltroAlumno(); // vuelve a filtrar y renderizar la tabla
     });
   }
 
   if (btnLimpiarBusquedaAlumno) {
     btnLimpiarBusquedaAlumno.addEventListener("click", () => {
-      textoBusquedaAlumno = "";
+      textoBusquedaAlumno = ""; // limpia el texto guardado
 
       if (inputBuscarAlumno) {
-        inputBuscarAlumno.value = "";
+        inputBuscarAlumno.value = ""; // limpia visualmente el input
       }
 
-      aplicarFiltroAlumno();
+      aplicarFiltroAlumno(); // vuelve a mostrar resultados sin búsqueda
     });
   }
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const idGrupo = urlParams.get("id");
+  const urlParams = new URLSearchParams(window.location.search); // lee los parámetros de la URL actual
+  const idGrupo = urlParams.get("id"); // obtiene el id del grupo, por ejemplo grupos-alumnos.html?id=3
 
   if (idGrupo) {
-    cargarAlumnos(idGrupo);
+    cargarAlumnos(idGrupo); // si hay id de grupo, carga sus alumnos
   } else {
-    window.location.href = "grupos.html";
+    window.location.href = "grupos.html"; // si no hay id, redirige al listado de grupos
   }
 });
 
-/* =========================================================
-   UTILIDAD FOTO
-========================================================= */
+// =========================================================
+// UTILIDAD FOTO
+// =========================================================
 function obtenerFotoAlumno(foto) {
-  return foto && String(foto).trim() !== "" ? foto : "/img/default-user.png";
+  return foto && String(foto).trim() !== "" ? foto : "/img/default-user.png"; // si el alumno tiene foto, la usa; si no, pone imagen por defecto
 }
 
-/* =========================================================
-   CARGAR ALUMNOS DESDE EL SERVIDOR
-========================================================= */
+// =========================================================
+// CARGAR ALUMNOS DESDE EL SERVIDOR
+// =========================================================
 async function cargarAlumnos(idGrupo) {
   try {
     const res = await fetch(`${API_URL}?id=${idGrupo}`, {
       headers: {
-        Authorization: "Bearer " + localStorage.getItem("token"),
+        Authorization: "Bearer " + localStorage.getItem("token"), // manda el token JWT para autenticar la petición
       },
     });
 
     if (res.status === 401) {
-      return window.location.replace("/index.html");
+      // si el backend responde no autorizado
+      return window.location.replace("/index.html"); // manda al login
     }
 
-    const alumnos = await res.json();
-    alumnosOriginales = Array.isArray(alumnos) ? alumnos : [];
+    const alumnos = await res.json(); // convierte la respuesta a JSON
+    alumnosOriginales = Array.isArray(alumnos) ? alumnos : []; // guarda el arreglo si realmente es un array; si no, guarda vacío
 
     if (alumnosOriginales.length > 0 && alumnosOriginales[0].grupo) {
+      // si al menos hay un alumno y viene el nombre del grupo
       document.getElementById("tituloPagina").innerText =
-        `Alumnos del Grupo: ${alumnosOriginales[0].grupo}`;
+        `Alumnos del Grupo: ${alumnosOriginales[0].grupo}`; // cambia el título para mostrar el grupo actual
     }
 
-    actualizarResumen();
-    actualizarTarjetasFiltro();
-    aplicarFiltroAlumno();
+    actualizarResumen(); // actualiza las tarjetas resumen
+    actualizarTarjetasFiltro(); // marca la tarjeta de filtro actual
+    aplicarFiltroAlumno(); // aplica filtro y renderiza la tabla
   } catch (error) {
-    console.error("Error al cargar alumnos:", error);
-    alumnosOriginales = [];
-    actualizarResumen();
-    actualizarTarjetasFiltro();
-    aplicarFiltroAlumno();
+    console.error("Error al cargar alumnos:", error); // muestra error en consola
+    alumnosOriginales = []; // deja el arreglo vacío si hubo error
+    actualizarResumen(); // actualiza resumen con datos vacíos
+    actualizarTarjetasFiltro(); // actualiza estado visual de filtros
+    aplicarFiltroAlumno(); // renderiza vista vacía
   }
 }
 
-/* =========================================================
-   SABER SI UN ALUMNO YA ESTÁ LIBERADO
-========================================================= */
+// =========================================================
+// SABER SI UN ALUMNO YA ESTÁ LIBERADO
+// =========================================================
 function estaLiberado(alumno) {
-  return Number(alumno.horas_liberadas || 0) >= 480;
+  return Number(alumno.horas_liberadas || 0) >= 480; // devuelve true si el alumno ya llegó o superó las 480 horas
 }
 
-/* =========================================================
-   CAMBIAR FILTRO
-========================================================= */
+// =========================================================
+// CAMBIAR FILTRO
+// =========================================================
 function cambiarFiltroAlumno(tipo) {
-  filtroActual = tipo;
-  actualizarTarjetasFiltro();
-  aplicarFiltroAlumno();
+  filtroActual = tipo; // cambia el filtro global actual
+  actualizarTarjetasFiltro(); // actualiza la tarjeta resaltada
+  aplicarFiltroAlumno(); // aplica el nuevo filtro y renderiza
 }
 
-/* =========================================================
-   ACTUALIZAR TARJETA ACTIVA
-========================================================= */
+// =========================================================
+// ACTUALIZAR TARJETA ACTIVA
+// =========================================================
 function actualizarTarjetasFiltro() {
-  const cardTodos = document.getElementById("cardFiltroTodos");
-  const cardLiberados = document.getElementById("cardFiltroLiberados");
-  const cardPendientes = document.getElementById("cardFiltroPendientes");
+  const cardTodos = document.getElementById("cardFiltroTodos"); // tarjeta filtro "todos"
+  const cardLiberados = document.getElementById("cardFiltroLiberados"); // tarjeta filtro "liberados"
+  const cardPendientes = document.getElementById("cardFiltroPendientes"); // tarjeta filtro "pendientes"
 
-  cardTodos?.classList.remove("activo");
-  cardLiberados?.classList.remove("activo");
-  cardPendientes?.classList.remove("activo");
+  cardTodos?.classList.remove("activo"); // quita clase activa a "todos" si existe
+  cardLiberados?.classList.remove("activo"); // quita clase activa a "liberados" si existe
+  cardPendientes?.classList.remove("activo"); // quita clase activa a "pendientes" si existe
 
   if (filtroActual === "todos") {
-    cardTodos?.classList.add("activo");
+    cardTodos?.classList.add("activo"); // activa la tarjeta de "todos"
   }
 
   if (filtroActual === "liberados") {
-    cardLiberados?.classList.add("activo");
+    cardLiberados?.classList.add("activo"); // activa la tarjeta de "liberados"
   }
 
   if (filtroActual === "pendientes") {
-    cardPendientes?.classList.add("activo");
+    cardPendientes?.classList.add("activo"); // activa la tarjeta de "pendientes"
   }
 }
 
-/* =========================================================
-   ACTUALIZAR TARJETAS RESUMEN
-========================================================= */
+// =========================================================
+// ACTUALIZAR TARJETAS RESUMEN
+// =========================================================
 function actualizarResumen() {
-  const total = alumnosOriginales.length;
-  const liberados = alumnosOriginales.filter((a) => estaLiberado(a)).length;
-  const pendientes = total - liberados;
+  const total = alumnosOriginales.length; // total de alumnos cargados
+  const liberados = alumnosOriginales.filter((a) => estaLiberado(a)).length; // cuenta cuántos ya están liberados
+  const pendientes = total - liberados; // calcula cuántos siguen pendientes
 
-  const cardTotalAlumnos = document.getElementById("cardTotalAlumnos");
-  const cardLiberados = document.getElementById("cardLiberados");
-  const cardPendientes = document.getElementById("cardPendientes");
+  const cardTotalAlumnos = document.getElementById("cardTotalAlumnos"); // tarjeta de total alumnos
+  const cardLiberados = document.getElementById("cardLiberados"); // tarjeta de liberados
+  const cardPendientes = document.getElementById("cardPendientes"); // tarjeta de pendientes
 
-  if (cardTotalAlumnos) cardTotalAlumnos.innerText = total;
-  if (cardLiberados) cardLiberados.innerText = liberados;
-  if (cardPendientes) cardPendientes.innerText = pendientes;
+  if (cardTotalAlumnos) cardTotalAlumnos.innerText = total; // actualiza total
+  if (cardLiberados) cardLiberados.innerText = liberados; // actualiza liberados
+  if (cardPendientes) cardPendientes.innerText = pendientes; // actualiza pendientes
 }
 
-/* =========================================================
-   APLICAR FILTRO
-========================================================= */
+// =========================================================
+// APLICAR FILTRO
+// =========================================================
 function aplicarFiltroAlumno() {
-  let filtrados = [...alumnosOriginales];
+  let filtrados = [...alumnosOriginales]; // crea una copia del arreglo original para no modificarlo
 
   if (filtroActual === "liberados") {
-    filtrados = filtrados.filter((alumno) => estaLiberado(alumno));
+    filtrados = filtrados.filter((alumno) => estaLiberado(alumno)); // deja solo alumnos liberados
   }
 
   if (filtroActual === "pendientes") {
-    filtrados = filtrados.filter((alumno) => !estaLiberado(alumno));
+    filtrados = filtrados.filter((alumno) => !estaLiberado(alumno)); // deja solo alumnos pendientes
   }
 
   if (textoBusquedaAlumno.trim() !== "") {
-    const texto = textoBusquedaAlumno.toLowerCase();
+    const texto = textoBusquedaAlumno.toLowerCase(); // normaliza el texto a minúsculas
 
     filtrados = filtrados.filter((alumno) => {
-      const nombre = (alumno.nombre || "").toLowerCase();
-      const matricula = (alumno.matricula || "").toLowerCase();
-      return nombre.includes(texto) || matricula.includes(texto);
+      const nombre = (alumno.nombre || "").toLowerCase(); // nombre del alumno en minúsculas
+      const matricula = (alumno.matricula || "").toLowerCase(); // matrícula en minúsculas
+      return nombre.includes(texto) || matricula.includes(texto); // deja pasar si coincide en nombre o matrícula
     });
   }
 
-  mostrarAlumnos(filtrados);
+  mostrarAlumnos(filtrados); // renderiza la tabla con los resultados finales
 }
 
-/* =========================================================
-   RENDER DE ACTIVIDADES DEL ALUMNO
-========================================================= */
+// =========================================================
+// RENDER DE ACTIVIDADES DEL ALUMNO
+// =========================================================
 function renderActividades(actividades) {
   if (!actividades || actividades.length === 0) {
-    return `<span class="text-muted fst-italic">Sin actividades registradas</span>`;
+    // si no hay actividades
+    return `<span class="text-muted fst-italic">Sin actividades registradas</span>`; // devuelve texto por defecto
   }
 
   return actividades
     .map((act) => {
-      const esCompleta = act.estatus === "completada";
+      const esCompleta = act.estatus === "completada"; // revisa si la actividad ya está completada
       const clase = esCompleta
-        ? "actividad-mini completa"
-        : "actividad-mini proceso";
+        ? "actividad-mini completa" // clase CSS para actividad completada
+        : "actividad-mini proceso"; // clase CSS para actividad en proceso
       const icono = esCompleta
-        ? "fas fa-check-circle"
-        : "fas fa-hourglass-half";
-      const estatusTexto = esCompleta ? "Completada" : "En proceso";
+        ? "fas fa-check-circle" // ícono de completada
+        : "fas fa-hourglass-half"; // ícono de en proceso
+      const estatusTexto = esCompleta ? "Completada" : "En proceso"; // texto visual del estatus
 
       return `
         <div class="${clase}">
           <i class="${icono} me-1"></i>
           ${act.nombre} — ${act.horas} hrs (${estatusTexto})
         </div>
-      `;
+      `; // genera el HTML de una mini actividad
     })
-    .join("");
+    .join(""); // une todas las mini actividades en un solo string HTML
 }
 
-/* =========================================================
-   MOSTRAR ALUMNOS EN TABLA
-========================================================= */
+// =========================================================
+// MOSTRAR ALUMNOS EN TABLA
+// =========================================================
 function mostrarAlumnos(alumnos) {
-  listaAlumnos.innerHTML = "";
+  listaAlumnos.innerHTML = ""; // limpia el contenido actual antes de volver a renderizar
 
   if (!alumnos || alumnos.length === 0) {
-    sinAlumnos.style.display = "block";
+    // si no hay alumnos a mostrar
+    sinAlumnos.style.display = "block"; // muestra mensaje de "sin alumnos"
     return;
   }
 
-  sinAlumnos.style.display = "none";
+  sinAlumnos.style.display = "none"; // oculta mensaje si sí hay alumnos
 
   alumnos.forEach((alumno) => {
-    const horas = Number(alumno.horas_liberadas || 0);
-    const porcentaje = Math.min(100, Math.round((horas / 480) * 100));
-    const liberado = estaLiberado(alumno);
+    const horas = Number(alumno.horas_liberadas || 0); // convierte las horas liberadas a número
+    const porcentaje = Math.min(100, Math.round((horas / 480) * 100)); // calcula porcentaje de avance, con tope de 100
+    const liberado = estaLiberado(alumno); // indica si ya liberó servicio
 
     listaAlumnos.innerHTML += `
       <tr>
@@ -296,11 +301,11 @@ function mostrarAlumnos(alumnos) {
           ${renderActividades(alumno.actividades)}
         </td>
       </tr>
-    `;
+    `; // agrega una fila completa por cada alumno con foto, datos, barra de progreso, estatus y actividades
   });
 }
 
-/* =========================================================
-   FUNCIÓN GLOBAL
-========================================================= */
-window.cambiarFiltroAlumno = cambiarFiltroAlumno;
+// =========================================================
+// FUNCIÓN GLOBAL
+// =========================================================
+window.cambiarFiltroAlumno = cambiarFiltroAlumno; // expone la función al scope global para poder usarla desde onclick en HTML
